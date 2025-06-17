@@ -1,0 +1,1453 @@
+(global short MarineDied 0)
+(global boolean Brute01_arrived FALSE)
+
+(script startup mission
+	(game_can_use_flashlights TRUE)
+	(print "START!!!!")
+	(wake squads)	
+	(wake vignette01)
+	(sleep_until (volume_test_objects trig_vol_02 (players))5)
+	(print "starting the other two...")
+	(wake vignette02)
+	(wake vignette03)
+)
+
+(script dormant Vig01_Cancel
+
+	(sleep_until 
+		(OR
+			(> (ai_combat_status vig_brute_01/vig_brute_observer) 2)
+			(> (ai_combat_status vig_brute_01/vig_brute_thrower) 2)
+		)
+	)
+	
+	(print "INTERRUPT VIG 1")
+	(sleep_forever brute01_dialogue)
+
+	(sound_impulse_stop 
+	sound\dialog\test\vingette_mockup\v01_brute_A_expo1)
+		
+	(sound_impulse_stop 
+	sound\dialog\test\vingette_mockup\v01_brute_B_expo1)
+
+	(sound_impulse_stop 
+	sound\dialog\test\vingette_mockup\v01_brute_A_expo2)
+	
+	(sound_impulse_stop 
+	sound\dialog\test\vingette_mockup\v01_brute_B_expo2)	
+	
+	(if (= Brute01_arrived FALSE)
+		(ai_set_orders vignette01_cov order_vig_brute_01)	
+		(ai_set_orders vignette01_cov order_vig_brute_01a)	
+	)	
+)
+
+(script dormant Vig02_Cancel
+	
+	(sleep_until (> (ai_combat_status vig_brute_02/vig_brute_chieftan) 
+	2))
+	
+	(print "INTERRUPT VIG 2")
+	
+	(sound_impulse_stop 
+	sound\dialog\test\vingette_mockup\v01_brute_comm_expo1)
+	
+	(sound_impulse_stop 
+	sound\dialog\test\vingette_mockup\v01_radio_expo1)
+		
+	(sound_impulse_stop 
+	sound\dialog\test\vingette_mockup\v01_brute_comm_expo2)
+		
+	(sound_impulse_stop 
+	sound\dialog\test\vingette_mockup\v01_radio_expo2)
+		
+	(sound_impulse_stop 
+	sound\dialog\test\vingette_mockup\v01_brute_comm_expo3)
+		
+	(sound_impulse_stop 
+	sound\dialog\test\vingette_mockup\v01_radio_expo3)
+	
+	(sound_impulse_stop 
+	sound\dialog\test\vingette_mockup\v01_brute_comm_expo4)
+		
+	(sound_impulse_stop 
+	sound\dialog\test\vingette_mockup\v01_radio_expo4)
+	
+	(sleep_forever vignette02)
+	
+)
+
+(script dormant Vig03_Cancel
+	(sleep_until 
+		(OR
+			(> (ai_combat_status vig_brute_03/vig_brute_abuser_01) 2)
+			(> (ai_combat_status vig_brute_03/vig_brute_abuser_02) 2)
+			(> (ai_combat_status vig_brute_03/vig_brute_abuser_03) 2)
+			(> (ai_combat_status vig_grunt_01/vig_grunt01_plasma) 2)
+			(> (ai_combat_status vig_grunt_01/vig_grunt02_plasma) 2)			
+		)
+	)
+
+	(print "INTERRUPT VIG 3")
+		
+	(sleep_forever vignette03)
+	(sleep_forever Brute01KillsMarine02a)
+	(sleep_forever Brute01KillsMarine02b)
+	(sleep_forever GruntsKillMarine02c)
+	(sleep_forever Brute01KillsMarine02aReactions)
+	(sleep_forever Brute01_Reactions)
+	(sleep_forever Marine02_b_Reactions)
+	(sleep_forever Marine02_c_Reactions)
+	(sleep_forever Brute02_Reactions)
+	(sleep_forever Brute03_Reactions)
+	(sleep_forever Grunt01_Reactions)
+	(sleep_forever Grunt02_Reactions)
+		
+	(ai_set_orders vignette03_cov End_Cov)	
+)
+
+(script dormant squads
+
+	(ai_place combat_brutes01)
+	
+	(ai_disregard (ai_actors combat_brutes01) TRUE)	
+	
+	(ai_place vig_brute_01/vig_brute_observer)
+	(ai_place vig_brute_01/vig_brute_thrower)
+	(ai_place vig_brute_02/vig_brute_chieftan)
+
+	(ai_place vig_brute_03/vig_brute_abuser_01)
+
+	(ai_place vig_brute_03/vig_brute_abuser_02)
+	(cs_run_command_script vig_brute_03/vig_brute_abuser_02 Brute02_Loop_Init)
+	(cs_queue_command_script vig_brute_03/vig_brute_abuser_02  Brute02_React_Player)	
+		
+	(ai_place vig_brute_03/vig_brute_abuser_03)
+	
+	(ai_dialogue_enable FALSE)
+	
+	(cs_run_command_script vig_brute_03/vig_brute_abuser_03 
+	Brute03_Loop_Init)
+
+	(cs_queue_command_script vig_brute_03/vig_brute_abuser_03  Brute03_React_Player)	
+	
+	(ai_place vig_marine_02/vig_marine_02_a)
+	(cs_run_command_script vig_marine_02/vig_marine_02_a
+	Marine02a_Loop_Init)
+	
+	(ai_place vig_marine_02/vig_marine_02_b)
+	(cs_run_command_script vig_marine_02/vig_marine_02_b
+	Marine02b_Loop_Init)
+	
+	(ai_place vig_marine_02/vig_marine_02_c)
+	(cs_run_command_script vig_marine_02/vig_marine_02_c
+	Marine02c_Loop_Init)
+	
+	(ai_disregard (ai_actors vig_marine_02) TRUE)	
+
+	(ai_place vig_grunt_01/vig_grunt01_plasma)
+	(cs_run_command_script vig_grunt_01/vig_grunt01_plasma
+	Grunt01_Plasma_Loop_Init)
+	(cs_queue_command_script vig_grunt_01/vig_grunt01_plasma  Grunt01_React_Player)	
+
+	(ai_place vig_grunt_01/vig_grunt02_plasma)
+	(cs_run_command_script vig_grunt_01/vig_grunt02_plasma
+	Grunt02_Plasma_Loop_Init)
+	(cs_queue_command_script vig_grunt_01/vig_grunt02_plasma  Grunt02_React_Player)	
+
+	(ai_set_deaf vig_brute_01/vig_brute_observer TRUE)
+	(ai_set_blind vig_brute_01/vig_brute_observer TRUE)
+	
+	(ai_set_deaf vig_brute_02/vig_brute_chieftan TRUE)
+	(ai_set_blind vig_brute_02/vig_brute_chieftan TRUE)
+	
+	(ai_set_deaf vig_brute_03/vig_brute_abuser_01 TRUE)
+	(ai_set_blind vig_brute_03/vig_brute_abuser_01 TRUE)
+	
+	(ai_set_deaf vig_brute_03/vig_brute_abuser_02 TRUE)
+	(ai_set_blind vig_brute_03/vig_brute_abuser_02 TRUE)
+	
+	(ai_set_deaf vig_brute_03/vig_brute_abuser_03 TRUE)
+	(ai_set_blind vig_brute_03/vig_brute_abuser_03 TRUE)
+	
+	(ai_set_deaf vig_grunt_01/vig_grunt01_plasma TRUE)
+	(ai_set_blind vig_grunt_01/vig_grunt01_plasma TRUE)
+	
+	(ai_set_deaf vig_grunt_01/vig_grunt02_plasma TRUE)
+	(ai_set_blind vig_grunt_01/vig_grunt02_plasma TRUE)
+
+)
+
+(script dormant vignette01
+
+	(sleep_until 
+		(OR
+			(volume_test_objects trig_vol_01 (players))
+			(volume_test_objects trig_vol_03 (players))
+		)
+	5)
+	
+	(wake Vig01_Cancel)	
+
+	(ai_set_deaf vig_brute_01/vig_brute_observer FALSE)
+	(ai_set_blind vig_brute_01/vig_brute_observer FALSE)
+	
+	(ai_set_deaf vig_brute_01/vig_brute_thrower FALSE)
+	(ai_set_blind vig_brute_01/vig_brute_thrower FALSE)	
+	
+	(print "starting one...")
+
+	(cs_run_command_script vig_brute_01/vig_brute_thrower Brute01aThrow)
+	(cs_queue_command_script vig_brute_01/vig_brute_thrower  Brute01bReactPlayer)
+	
+	(Marine01Dead)
+
+	(cs_run_command_script vig_brute_01/vig_brute_observer Brute01bReact)
+	(cs_queue_command_script vig_brute_01/vig_brute_observer  Brute01bReactPlayer)
+
+	(cs_run_command_script vig_brute_01/vig_brute_thrower Brute01aReact)
+	(cs_queue_command_script vig_brute_01/vig_brute_thrower  Brute01aReactPlayer)	
+	
+	(sleep 60)
+		
+	(cs_run_command_script vig_brute_01/vig_brute_observer cs_brute_observer_movement)
+	
+	(sleep 30)
+	(cs_run_command_script vig_brute_01/vig_brute_thrower cs_brute_thrower_movement)	
+	
+	(sleep 120)
+		
+	(wake brute01_dialogue)
+)
+
+(script dormant brute01_dialogue
+
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_brute_A_expo1 (list_get (ai_actors vig_brute_01/vig_brute_thrower) 0) 1)
+	
+	(sleep (sound_impulse_language_time 
+	sound\dialog\test\vingette_mockup\v01_brute_A_expo1))
+	
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_brute_B_expo1 (list_get 
+	(ai_actors vig_brute_01/vig_brute_observer) 0) 1)
+
+	(sleep (sound_impulse_language_time 
+	sound\dialog\test\vingette_mockup\v01_brute_B_expo1))
+
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_brute_A_expo2 (list_get (ai_actors vig_brute_01/vig_brute_thrower) 0) 1)
+	
+	(sleep (sound_impulse_language_time 
+	sound\dialog\test\vingette_mockup\v01_brute_A_expo2))
+	
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_brute_B_expo2 (list_get 
+	(ai_actors vig_brute_01/vig_brute_observer) 0) 1)
+)
+
+(script command_script Brute01aThrow
+	
+	(custom_animation (ai_get_unit 
+ 	vig_brute_01/vig_brute_thrower) 
+	objects\characters\brute\vignette\vignette "v01_brute_a_throw" 
+	false )		
+
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_brute_A_throw (list_get 
+	(ai_actors vig_brute_01/vig_brute_thrower) 0) 1)			
+	
+)
+
+(script command_script Brute01aReact
+
+	(cs_enable_moving true)
+	(cs_enable_targeting true)
+	(cs_enable_looking true)
+	(cs_abort_on_alert true)
+	(cs_abort_on_combat_status_visible TRUE)
+	
+	(sleep 15)
+
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_brute_A_react (list_get 
+	(ai_actors vig_brute_01/vig_brute_thrower) 0) 1)
+	
+	(custom_animation (ai_get_unit 
+ 	vig_brute_01/vig_brute_thrower) 
+	objects\characters\brute\vignette\vignette "v01_brute_a_react" 
+	false )
+
+	(sleep_forever)
+		
+)
+		
+(script command_script Brute01bReact
+	(cs_enable_moving true)
+	(cs_enable_targeting true)
+	(cs_enable_looking true)
+	(cs_abort_on_alert true)
+	(sleep 15)
+
+ 	(custom_animation (ai_get_unit 
+ 	vig_brute_01/vig_brute_observer) 
+	objects\characters\brute\vignette\vignette "v01_brute_b_watch" 
+	false )
+	
+	(sleep 10)
+
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_brute_B_react (list_get 
+	(ai_actors vig_brute_01/vig_brute_observer) 0) 1)
+
+	(cs_abort_on_alert true)
+	(sleep_forever)		
+)
+
+(script command_script Brute01bReactPlayer
+
+	(custom_animation (ai_get_unit vig_brute_01/vig_brute_observer) 
+	objects\characters\brute\vignette\vignette 
+	"v01_brute_B_react_player" false )
+	
+)
+
+(script command_script Brute01aReactPlayer
+
+	(custom_animation (ai_get_unit vig_brute_01/vig_brute_thrower) 
+	objects\characters\brute\vignette\vignette 
+	"v01_brute_A_react_player" false )
+)
+
+(script command_script cs_brute_observer_movement
+
+	(cs_enable_pathfinding_failsafe true)
+	(cs_enable_moving true)
+	(cs_abort_on_alert true)
+	(cs_movement_mode ai_movement_patrol)
+	(cs_go_to vig_brute_observer_point/p0)
+	(cs_go_to vig_brute_observer_point/p1)
+	(cs_face TRUE look_at_brute02/p0)
+	
+)		
+ 
+(script command_script cs_brute_thrower_movement
+
+	(cs_enable_pathfinding_failsafe true)
+	(cs_enable_moving true)
+	(cs_abort_on_alert true)
+	(cs_movement_mode ai_movement_patrol)
+	(cs_go_to vig_brute_thrower_point/p0)
+	(cs_go_to vig_brute_thrower_point/p1)	
+	(cs_face TRUE look_at_brute02/p0)
+	(set Brute01_arrived TRUE)	
+	
+)
+
+(script dormant vignette02
+
+	(wake Vig02_Cancel)
+
+	(ai_set_deaf vig_brute_02/vig_brute_chieftan FALSE)
+	(ai_set_blind vig_brute_02/vig_brute_chieftan FALSE)
+
+	(cs_run_command_script vig_brute_02/vig_brute_chieftan Brute_Comm_Loop)
+	(cs_queue_command_script vig_brute_02/vig_brute_chieftan  Brute_Comm_Player_Reaction)
+
+	(Brute_Comm_Talk)
+	
+	(cs_run_command_script vig_brute_02/vig_brute_chieftan Brute_Comm_Idle)
+	(cs_queue_command_script vig_brute_02/vig_brute_chieftan  Brute_Comm_Player_Reaction)
+
+)
+
+(script command_script Brute_Comm_Loop
+
+	(custom_animation_loop (ai_get_unit 
+	vig_brute_02/vig_brute_chieftan) 
+	objects\characters\brute\vignette\vignette "v01_brute_comm_idle" 
+	false )
+	
+	(sleep 30)
+	
+	; Brute Talks on Communicator			
+	 (custom_animation_loop (ai_get_unit 
+ 	vig_brute_02/vig_brute_chieftan) 
+	objects\characters\brute\vignette\vignette "v01_brute_comm_talk" 
+	false )
+
+	(cs_enable_moving true)
+	(cs_enable_targeting true)
+	(cs_enable_looking true)
+	(cs_abort_on_alert true)
+	(sleep_forever)	
+)
+
+(script command_script Brute_Comm_Player_Reaction
+	(print "Big Brute Saw Player!")
+
+	 (custom_animation (ai_get_unit 
+ 	vig_brute_02/vig_brute_chieftan) 
+	objects\characters\brute\vignette\vignette 
+	"v01_brute_comm_react_player" 
+	false )
+	
+	(ai_set_orders vig_brute_02/vig_brute_chieftan order_vig_brute_02)	
+
+	(wake killradio)
+)
+
+(script static void Brute_Comm_Talk
+	
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_brute_comm_expo1 (list_get (ai_actors vig_brute_02/vig_brute_chieftan) 0) 1)
+	
+	(sleep (sound_impulse_language_time 
+	sound\dialog\test\vingette_mockup\v01_brute_comm_expo1))
+	
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_radio_expo1 radio 1)
+	
+	(sleep (sound_impulse_language_time 
+	sound\dialog\test\vingette_mockup\v01_radio_expo1))
+	
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_brute_comm_expo2 (list_get (ai_actors vig_brute_02/vig_brute_chieftan) 0) 1)
+	
+	(sleep (sound_impulse_language_time 
+	sound\dialog\test\vingette_mockup\v01_brute_comm_expo2))
+	
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_radio_expo2 radio 1)
+	
+	(sleep (sound_impulse_language_time 
+	sound\dialog\test\vingette_mockup\v01_radio_expo2))	
+	
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_brute_comm_expo3 (list_get (ai_actors vig_brute_02/vig_brute_chieftan) 0) 1)
+	
+	(sleep (sound_impulse_language_time 
+	sound\dialog\test\vingette_mockup\v01_brute_comm_expo3))
+	
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_radio_expo3 radio 1)
+	
+	(sleep (sound_impulse_language_time 
+	sound\dialog\test\vingette_mockup\v01_radio_expo3))
+
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_brute_comm_expo4 (list_get (ai_actors vig_brute_02/vig_brute_chieftan) 0) 1)
+	
+	(sleep (sound_impulse_language_time 
+	sound\dialog\test\vingette_mockup\v01_brute_comm_expo4))
+	
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_radio_expo4 radio 1)
+	
+	(sleep (sound_impulse_language_time 
+	sound\dialog\test\vingette_mockup\v01_radio_expo4))		
+)
+
+(script command_script Brute_Comm_Idle
+
+	(custom_animation_loop (ai_get_unit 
+ 	vig_brute_02/vig_brute_chieftan) 
+	objects\characters\brute\vignette\vignette "v01_brute_comm_idle" 
+	false )
+
+)
+
+(script static void BigBruteReacts
+
+	(print "Big Brute KNOWS!!")
+	
+	(custom_animation (ai_get_unit vig_brute_02/vig_brute_chieftan) 
+	objects\characters\brute\vignette\vignette 
+	"v01_brute_comm_react_grenade" false )
+	
+	(sound_impulse_start sound\dialog\test\vingette_mockup\v01_brute_comm_react_grenade (list_get 
+	(ai_actors vig_brute_02/vig_brute_chieftan) 0) 1)
+	
+	(sleep 30)
+
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_radio_react radio 1)
+	
+	(wake killradio)
+	
+	(sleep (unit_get_custom_animation_time (ai_get_unit vig_brute_02/vig_brute_chieftan)))
+		
+	
+)
+
+(script command_script big_brute_path
+
+	(cs_enable_pathfinding_failsafe true)
+	(cs_enable_moving true)		
+	(cs_movement_mode ai_movement_combat)
+	(cs_go_to big_brute/p0)
+	
+;	(custom_animation (ai_get_unit vig_brute_02/vig_brute_chieftan) 
+;	objects\characters\brute\vignette\vignette 
+;	"v01_brute_comm_smash" false )	
+	
+	(cs_go_to big_brute/p1)	
+	(cs_face TRUE big_brute/p2)
+		
+	(Last_reaction)	
+		
+)
+
+(script dormant killradio
+
+	(sound_impulse_stop 
+	sound\dialog\test\vingette_mockup\v01_brute_comm_expo1)
+	
+	(sound_impulse_stop 
+	sound\dialog\test\vingette_mockup\v01_radio_expo1)
+		
+	(sound_impulse_stop 
+	sound\dialog\test\vingette_mockup\v01_brute_comm_expo2)
+		
+	(sound_impulse_stop 
+	sound\dialog\test\vingette_mockup\v01_radio_expo2)
+		
+	(sound_impulse_stop 
+	sound\dialog\test\vingette_mockup\v01_brute_comm_expo3)
+		
+	(sound_impulse_stop 
+	sound\dialog\test\vingette_mockup\v01_radio_expo3)
+	
+	(sound_impulse_stop 
+	sound\dialog\test\vingette_mockup\v01_brute_comm_expo4)
+		
+	(sound_impulse_stop 
+	sound\dialog\test\vingette_mockup\v01_radio_expo4)
+	
+	(sleep_forever vignette02)
+)
+
+(script static void Last_reaction
+
+	(print "LAST REACTION!!!!!!!!!!!!!!!!")
+
+
+	(set MarineDied 4)
+	(print "MarineDied 4")
+			
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_brute_comm_shout (list_get 
+	(ai_actors vig_brute_02/vig_brute_chieftan) 0) 1)			
+)
+
+;====== VIGNETTE03 START============
+
+(script dormant vignette03
+
+	(wake Vig03_Cancel)
+
+
+	(ai_set_deaf vig_brute_03/vig_brute_abuser_01 FALSE)
+	(ai_set_blind vig_brute_03/vig_brute_abuser_01 FALSE)
+	
+	(ai_set_deaf vig_brute_03/vig_brute_abuser_02 FALSE)
+	(ai_set_blind vig_brute_03/vig_brute_abuser_02 FALSE)
+	
+	(ai_set_deaf vig_brute_03/vig_brute_abuser_03 FALSE)
+	(ai_set_blind vig_brute_03/vig_brute_abuser_03 FALSE)
+	
+	(ai_set_deaf vig_grunt_01/vig_grunt01_plasma FALSE)
+	(ai_set_blind vig_grunt_01/vig_grunt01_plasma FALSE)
+	
+	(ai_set_deaf vig_grunt_01/vig_grunt02_plasma FALSE)
+	(ai_set_blind vig_grunt_01/vig_grunt02_plasma FALSE)
+
+	(Brute01KillsMarine02a)
+	(sleep 60)
+	(Brute01KillsMarine02b)
+	(sleep 60)
+	(GruntsKillMarine02c)
+
+)
+
+(script static void Brute01KillsMarine02a
+
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_brute_01_kill_01 (list_get 
+	(ai_actors vig_brute_03/vig_brute_abuser_01) 0) 1)
+	
+	
+	(sleep (sound_impulse_language_time 
+	sound\dialog\test\vingette_mockup\v01_brute_01_kill_01))	
+	
+	(custom_animation (ai_get_unit vig_brute_03/vig_brute_abuser_01) 
+	objects\characters\brute\vignette\vignette "v01_brute_01_kill_01" 
+	false )
+	
+	(cs_run_command_script vig_brute_03/vig_brute_abuser_01 
+	cs_Brute_Shoot)
+	
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_marine_02_react_01 (list_get 
+	(ai_actors vig_marine_02/vig_marine_02_b) 0) 1)
+	
+ 	(sleep 10)
+	
+	(custom_animation (ai_get_unit vig_marine_02/vig_marine_02_a) 
+ 	objects\characters\marine\vignette\vignette 
+ 	"v01_marine_01_executed" false )
+ 	
+ 	(print "executed!")
+ 	
+	(sleep (unit_get_custom_animation_time (ai_get_unit vig_marine_02/vig_marine_02_a)))
+
+	(set MarineDied 1)
+	
+	(print "MarineDied 1")
+	
+	(sleep 10)
+
+	(ai_kill vig_marine_02/vig_marine_02_a)
+	(print "Marine 1 DEAD")
+
+	(Brute01KillsMarine02aReactions)
+	
+)
+	
+;Reactions (1)
+
+(script static void Brute01KillsMarine02aReactions
+
+	(print "Reactions1!!")
+		
+	(wake Brute01_Reactions)
+	
+	(wake Marine02_b_Reactions)
+	
+	(wake Marine02_c_Reactions)
+	
+	(wake Brute02_Reactions)
+	
+	(wake Brute03_Reactions)
+		
+	(wake Grunt01_Reactions)
+	
+	(wake Grunt02_Reactions)					
+)
+
+(script static void Brute01KillsMarine02b
+	(print "kill guy 2?")
+	
+	(sleep 30)
+	
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_brute_01_kill_02 (list_get 
+	(ai_actors vig_brute_03/vig_brute_abuser_01) 0) 1)
+	
+	(sleep (sound_impulse_language_time 
+	sound\dialog\test\vingette_mockup\v01_brute_01_kill_02))		
+	
+	(custom_animation (ai_get_unit vig_brute_03/vig_brute_abuser_01) 
+	objects\characters\brute\vignette\vignette "v01_brute_01_kill_02" 
+	false )
+	
+	(custom_animation (ai_get_unit 
+	vig_marine_02/vig_marine_02_b) 
+ 	objects\characters\marine\vignette\vignette 
+ 	"v01_marine_02_snap_throw" false )
+ 	
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_marine_02_snap_throw (list_get 
+	(ai_actors vig_marine_02/vig_marine_02_b) 0) 1)
+	 
+	(sleep (unit_get_custom_animation_time (ai_get_unit vig_marine_02/vig_marine_02_b)))
+
+	(print "MarineDied 2")
+		
+	
+	(sleep 10)
+
+	(ai_kill vig_marine_02/vig_marine_02_b)
+	(print "Marine 2 DEAD")
+		(set MarineDied 2)
+
+)
+
+(script static void GruntsKillMarine02c
+	(print "kill guy 3?")
+	(sleep 90)
+	
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_brute_01_shove (list_get 
+	(ai_actors vig_brute_03/vig_brute_abuser_01) 0) 1)
+	
+	(sleep (sound_impulse_language_time 
+	sound\dialog\test\vingette_mockup\v01_brute_01_shove))
+	
+	(custom_animation (ai_get_unit vig_brute_03/vig_brute_abuser_01) 
+	objects\characters\brute\vignette\vignette "v01_brute_01_shove" 
+	false )
+
+	(custom_animation (ai_get_unit 
+	vig_marine_02/vig_marine_02_c) 
+ 	objects\characters\marine\vignette\vignette 
+ 	"v01_marine_03_shoved" false )
+ 	
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_marine_03_shoved (list_get 
+	(ai_actors vig_marine_02/vig_marine_02_c) 0) 1)
+	
+	(sleep 30)
+	
+	(custom_animation (ai_get_unit vig_brute_03/vig_brute_abuser_01) 
+	objects\characters\brute\vignette\vignette "v01_brute_01_grunts" 
+	false )	
+	
+	(custom_animation (ai_get_unit vig_grunt_01/vig_grunt02_plasma) 
+	objects\characters\grunt\vignette\vignette 
+	"v01_grunt_02_trans_idle" false )
+	
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_grunt_02_trans_idle (list_get 
+	(ai_actors vig_grunt_01/vig_grunt02_plasma) 0) 1)
+		
+	(custom_animation (ai_get_unit vig_grunt_01/vig_grunt01_plasma) 
+	objects\characters\grunt\vignette\vignette 
+	"v01_grunt_01_trans_idle" false )
+	
+	(sleep 30)
+	
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_grunt_01_trans_idle (list_get 
+	(ai_actors vig_grunt_01/vig_grunt01_plasma) 0) 1)
+	
+	(sleep (unit_get_custom_animation_time (ai_get_unit vig_grunt_01/vig_grunt01_plasma)))
+		
+	(cs_run_command_script vig_grunt_01/vig_grunt02_plasma cs_throw_grenade)	
+	(cs_run_command_script vig_grunt_01/vig_grunt01_plasma cs_throw_grenade)
+	
+	
+	(sleep 60)
+		
+;	(sound_impulse_start sound\dialog\test\vingette_mockup\v01_marine_03_explode (list_get 
+;	(ai_actors vig_marine_02/vig_marine_02_c) 0) 1)
+
+	(ai_kill vig_marine_02/vig_marine_02_c)	
+
+	(print "Marine 3 DEAD")
+
+	
+	(if 	(< (ai_living_count vig_marine_02) 1)
+		(begin
+			(BigBruteReacts)
+			(cs_run_command_script vig_brute_02/vig_brute_chieftan big_brute_path)	
+		)
+	)
+)
+
+(script command_script cs_throw_grenade
+	(sleep 30)
+	
+	(cs_enable_moving true)
+	(cs_enable_targeting true)
+	(cs_enable_looking true)
+
+	(effect_new_on_object_marker 
+	"effects\impact\explosion_small\plasma_grenade\detonation" (list_get 
+	(ai_actors vig_marine_02/vig_marine_02_c) 0) "")
+		
+	(set MarineDied 3)
+	
+	(print "MarineDied 3")
+)
+
+(script static void Marine01Dead
+
+	(ai_place vig_marine_01/vig_marine01_dead)
+
+	(ai_disregard (ai_actors vig_marine_01) TRUE)	
+	
+
+	(print "MARINE DIES!!!!!!!!!!!")
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_marine_thrown (list_get 
+	(ai_actors vig_marine_01) 0) 1)
+	
+ 	(custom_animation (ai_get_unit vig_marine_01) 
+ 	objects\characters\marine\vignette\vignette "v01_marine_thrown" 
+ 	false )	
+ 		 	
+	(sleep (unit_get_custom_animation_time (ai_get_unit vig_marine_01)))
+
+	(ai_kill vig_marine_01)
+	
+)
+
+(script command_script Marine02a_Loop_Init			
+	(custom_animation_loop (ai_get_unit 
+	vig_marine_02/vig_marine_02_a) 
+	objects\characters\marine\vignette\vignette 
+	"v01_marine_01_helpless" false )
+	(sleep_forever)
+)	
+	
+
+(script command_script Marine02b_Loop_Init				
+	(custom_animation_loop (ai_get_unit 
+	vig_marine_02/vig_marine_02_b) 
+	objects\characters\marine\vignette\vignette 
+	"v01_marine_02_helpless" false )
+	(sleep_forever)
+	
+)
+		
+	
+(script command_script Marine02c_Loop_Init				
+	(custom_animation_loop (ai_get_unit 
+	vig_marine_02/vig_marine_02_c) 
+	objects\characters\marine\vignette\vignette 
+	"v01_marine_03_helpless" false )
+	(sleep_forever)
+	
+)
+			
+;========BRUTE01 SCRIPTS=======
+
+(script command_script cs_Brute_Shoot
+
+	(cs_shoot_point TRUE firing_point/p0)	
+
+)	
+
+(script dormant Brute01_Reactions
+
+	(cs_run_command_script vig_brute_03/vig_brute_abuser_01 Brute01_Reaction01)
+	(cs_queue_command_script vig_brute_03/vig_brute_abuser_01  Brute01_React_Player)
+	
+	(sleep_until (= MarineDied 3))
+	
+	(cs_run_command_script vig_brute_03/vig_brute_abuser_01 
+	Brute01_Reaction03)
+	(cs_queue_command_script vig_brute_03/vig_brute_abuser_01  Brute01_React_Player)
+	
+	(sleep_until (= MarineDied 4))
+
+	(cs_run_command_script vig_brute_03/vig_brute_abuser_01 
+	Brute01_Reaction04)
+	(cs_queue_command_script vig_brute_03/vig_brute_abuser_01  Brute01_React_Player)
+)
+
+(script command_script Brute01_Reaction01
+
+	(cs_enable_moving true)
+	(cs_enable_targeting true)
+	(cs_enable_looking true)
+	
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_brute_01_react_01 (list_get 
+	(ai_actors vig_brute_03/vig_brute_abuser_01) 0) 1)
+
+	(custom_animation (ai_get_unit vig_brute_03/vig_brute_abuser_01) 
+	objects\characters\brute\vignette\vignette "v01_brute_01_react_01" 
+	false )	
+
+	(cs_abort_on_alert true)
+	(sleep_forever)	
+)	
+
+(script command_script Brute01_Reaction03
+
+	(sound_impulse_start
+	sound\dialog\test\vingette_mockup\v01_brute_01_react_03 (list_get 
+	(ai_actors vig_brute_03/vig_brute_abuser_01) 0) 1)
+
+	(custom_animation (ai_get_unit vig_brute_03/vig_brute_abuser_01) 
+	objects\characters\brute\vignette\vignette "v01_brute_01_react_03" 
+	false )
+	
+	(cs_abort_on_alert true)
+	(sleep_forever)	
+)	
+
+(script command_script Brute01_Reaction04	
+	(custom_animation_loop (ai_get_unit vig_brute_03/vig_brute_abuser_02) 
+	objects\characters\brute\vignette\vignette "v01_brute_01_react_brute_comm" 
+	false )
+	
+	(cs_abort_on_alert true)
+	(sleep_forever)	
+)
+
+(script command_script Brute01_React_Player
+	(custom_animation (ai_get_unit 
+	vig_brute_03/vig_brute_abuser_01) 
+	objects\characters\brute\vignette\vignette 
+	"v01_brute_01_react_player" false )
+	(sleep (unit_get_custom_animation_time (ai_get_unit 
+	vig_brute_03/vig_brute_abuser_01)))
+	
+)
+
+;=========BRUTE02 SCRIPTS=========
+
+(script command_script Brute02_Loop_Init
+
+	(cs_enable_moving true)
+	(cs_enable_targeting true)
+	(cs_enable_looking true)
+	
+	(custom_animation_loop (ai_get_unit vig_brute_03/vig_brute_abuser_02) 
+	objects\characters\brute\vignette\vignette 
+	"v01_brute_02_idle" true )
+
+	(cs_abort_on_alert true)
+	(sleep_forever)	
+)
+
+(script dormant Brute02_Reactions
+	(cs_run_command_script vig_brute_03/vig_brute_abuser_02 
+	Brute02_Reaction01)
+	(cs_queue_command_script vig_brute_03/vig_brute_abuser_02  Brute02_React_Player)
+	
+	(sleep_until (= MarineDied 2))
+
+	(cs_run_command_script vig_brute_03/vig_brute_abuser_02 
+	Brute02_Reaction02)
+	(cs_queue_command_script vig_brute_03/vig_brute_abuser_02  Brute02_React_Player)
+
+	(sleep_until (= MarineDied 3))
+
+	(cs_run_command_script vig_brute_03/vig_brute_abuser_02 
+	Brute02_Reaction03)
+	(cs_queue_command_script vig_brute_03/vig_brute_abuser_02  Brute02_React_Player)
+	
+	(sleep_until (= MarineDied 4))
+
+	(cs_run_command_script vig_brute_03/vig_brute_abuser_02 
+	Brute02_Reaction04)
+	(cs_queue_command_script vig_brute_03/vig_brute_abuser_02  Brute02_React_Player)
+)	
+(script command_script Brute02_Reaction01
+
+	(cs_enable_moving true)
+	(cs_enable_targeting true)
+	(cs_enable_looking true)
+
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_brute_02_react_01 
+	(list_get (ai_actors vig_brute_03/vig_brute_abuser_02) 0) 1)
+	
+	(custom_animation (ai_get_unit 
+	vig_brute_03/vig_brute_abuser_02) 
+	objects\characters\brute\vignette\vignette "v01_brute_02_react_01" false )	
+			
+	(sleep (unit_get_custom_animation_time (ai_get_unit 
+	vig_brute_03/vig_brute_abuser_02)))
+				
+	(custom_animation_loop (ai_get_unit 
+	vig_brute_03/vig_brute_abuser_02) 
+	objects\characters\brute\vignette\vignette "v01_brute_02_idle" false )
+	
+	(cs_abort_on_alert true)
+	(sleep_forever)
+)			
+
+(script command_script Brute02_Reaction02
+	
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_brute_02_react_02 
+	(list_get (ai_actors vig_brute_03/vig_brute_abuser_02) 0) 1)
+							
+	(custom_animation (ai_get_unit 
+	vig_brute_03/vig_brute_abuser_02) 
+	objects\characters\brute\vignette\vignette "v01_brute_02_react_02" false )	
+				
+	(sleep (unit_get_custom_animation_time (ai_get_unit 
+	vig_brute_03/vig_brute_abuser_02)))
+				
+	(custom_animation_loop (ai_get_unit 
+	vig_brute_03/vig_brute_abuser_02) 
+	objects\characters\brute\vignette\vignette "v01_brute_02_idle" false )
+	
+	(cs_abort_on_alert true)
+	(sleep_forever)			
+)
+	
+(script command_script Brute02_Reaction03
+		
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_brute_02_react_03 
+	(list_get (ai_actors vig_brute_03/vig_brute_abuser_02) 0) 1)
+									
+	(custom_animation (ai_get_unit 
+	vig_brute_03/vig_brute_abuser_02) 
+	objects\characters\brute\vignette\vignette "v01_brute_02_react_03" false )	
+					
+	(sleep (unit_get_custom_animation_time (ai_get_unit 
+	vig_brute_03/vig_brute_abuser_02)))
+					
+	(custom_animation_loop (ai_get_unit 
+	vig_brute_03/vig_brute_abuser_02) 
+	objects\characters\brute\vignette\vignette "v01_brute_02_idle" false )
+	
+	(cs_abort_on_alert true)
+	(sleep_forever)
+)
+	
+(script command_script Brute02_Reaction04
+	
+	(custom_animation (ai_get_unit 
+	vig_brute_03/vig_brute_abuser_02) 
+	objects\characters\brute\vignette\vignette 
+	"v01_brute_02_react_brute_comm" false )
+	
+	(sleep (unit_get_custom_animation_time (ai_get_unit 
+	vig_brute_03/vig_brute_abuser_02)))
+	
+	(custom_animation_loop (ai_get_unit 
+	vig_brute_03/vig_brute_abuser_02) 
+	objects\characters\brute\vignette\vignette "v01_brute_02_idle" false )
+	
+	(cs_abort_on_alert true)
+	(sleep_forever)				
+)
+	
+(script command_script Brute02_React_Player
+	(custom_animation (ai_get_unit 
+	vig_brute_03/vig_brute_abuser_02) 
+	objects\characters\brute\vignette\vignette 
+	"v01_brute_02_react_player" false )
+	(sleep 1)
+)
+
+;=========BRUTE03 SCRIPTS=============
+
+(script command_script Brute03_Loop_Init
+	(cs_enable_moving true)
+	(cs_enable_targeting true)
+	(cs_enable_looking true)
+	
+	(custom_animation_loop (ai_get_unit vig_brute_03/vig_brute_abuser_03) 
+	objects\characters\brute\vignette\vignette 
+	"v01_brute_03_idle" true )
+	(cs_abort_on_alert true)
+	(sleep_forever)
+)
+
+(script dormant Brute03_Reactions
+	
+	(cs_run_command_script vig_brute_03/vig_brute_abuser_03 
+	Brute03_Reaction01)
+	(cs_queue_command_script vig_brute_03/vig_brute_abuser_03  Brute03_React_Player)
+	
+	(sleep_until (= MarineDied 2))
+
+	(cs_run_command_script vig_brute_03/vig_brute_abuser_03 
+	Brute03_Reaction02)
+	(cs_queue_command_script vig_brute_03/vig_brute_abuser_03  Brute03_React_Player)
+
+	(sleep_until (= MarineDied 3))
+
+	(cs_run_command_script vig_brute_03/vig_brute_abuser_03 
+	Brute03_Reaction03)
+	(cs_queue_command_script vig_brute_03/vig_brute_abuser_03  Brute03_React_Player)
+	
+	(sleep_until (= MarineDied 4))
+
+	(cs_run_command_script vig_brute_03/vig_brute_abuser_03 
+	Brute03_Reaction04)
+	(cs_queue_command_script vig_brute_03/vig_brute_abuser_03  Brute03_React_Player)	
+)
+
+(script command_script Brute03_Reaction01
+
+	(cs_enable_moving true)
+	(cs_enable_targeting true)
+	(cs_enable_looking true)
+
+	(sound_impulse_start sound\dialog\test\vingette_mockup\v01_brute_03_react_01 
+	(list_get (ai_actors vig_brute_03/vig_brute_abuser_03) 0) 1)
+	
+	(custom_animation (ai_get_unit vig_brute_03/vig_brute_abuser_03) 
+	objects\characters\brute\vignette\vignette "v01_brute_03_react_01" false )	
+			
+	(sleep (unit_get_custom_animation_time (ai_get_unit vig_brute_03/vig_brute_abuser_03)))
+				
+	(custom_animation_loop (ai_get_unit vig_brute_03/vig_brute_abuser_03) 
+	objects\characters\brute\vignette\vignette "v01_brute_03_idle" false )
+	
+	(cs_abort_on_alert true)
+	(sleep_forever)
+)			
+
+
+(script command_script Brute03_Reaction02
+	
+	(sound_impulse_start sound\dialog\test\vingette_mockup\v01_brute_03_react_02 
+	(list_get (ai_actors vig_brute_03/vig_brute_abuser_03) 0) 1)
+							
+	(custom_animation (ai_get_unit vig_brute_03/vig_brute_abuser_03) 
+	objects\characters\brute\vignette\vignette "v01_brute_03_react_02" false )	
+				
+	(sleep (unit_get_custom_animation_time (ai_get_unit vig_brute_03/vig_brute_abuser_03)))
+				
+	(custom_animation_loop (ai_get_unit vig_brute_03/vig_brute_abuser_03) 
+	objects\characters\brute\vignette\vignette "v01_brute_03_idle" false )
+	
+	(cs_abort_on_alert true)
+	(sleep_forever)			
+)
+	
+(script command_script Brute03_Reaction03
+	
+		
+	(sound_impulse_start sound\dialog\test\vingette_mockup\v01_brute_03_react_03 
+	(list_get (ai_actors vig_brute_03/vig_brute_abuser_03) 0) 1)
+									
+	(custom_animation (ai_get_unit vig_brute_03/vig_brute_abuser_03) 
+	objects\characters\brute\vignette\vignette "v01_brute_03_react_03" false )	
+					
+	(sleep (unit_get_custom_animation_time (ai_get_unit vig_brute_03/vig_brute_abuser_03)))
+					
+	(custom_animation_loop (ai_get_unit vig_brute_03/vig_brute_abuser_03) 
+	objects\characters\brute\vignette\vignette "v01_brute_03_idle" false )
+	
+	(cs_abort_on_alert true)
+	(sleep_forever)
+)
+	
+(script command_script Brute03_Reaction04
+	
+	(custom_animation (ai_get_unit 
+	vig_brute_03/vig_brute_abuser_03) 
+	objects\characters\brute\vignette\vignette 
+	"v01_brute_03_react_brute_comm" false )
+	
+	(sleep (unit_get_custom_animation_time (ai_get_unit vig_brute_03/vig_brute_abuser_03)))
+	
+	(custom_animation_loop (ai_get_unit vig_brute_03/vig_brute_abuser_03) 
+	objects\characters\brute\vignette\vignette "v01_brute_03_idle" false )
+	
+	(cs_abort_on_alert true)
+	(sleep_forever)				
+)
+
+(script command_script Brute03_React_Player
+	(custom_animation (ai_get_unit vig_brute_03/vig_brute_abuser_03) 
+	objects\characters\brute\vignette\vignette 
+	"v01_brute_03_react_player" false )
+	(sleep (unit_get_custom_animation_time (ai_get_unit vig_brute_03/vig_brute_abuser_03)))
+)
+
+;========GRUNT01 SCRIPTS=======
+
+	
+(script command_script Grunt01_Plasma_Loop_Init
+
+	(cs_enable_moving true)
+	(cs_enable_targeting true)
+	(cs_enable_looking true)
+	
+	(custom_animation_loop (ai_get_unit 
+	vig_grunt_01/vig_grunt01_plasma) 
+	objects\characters\grunt\vignette\vignette 
+	"v01_grunt_01_idle" false )
+	
+	(cs_abort_on_alert true)
+	(sleep_forever)
+)
+
+(script dormant Grunt01_Reactions
+	
+	(cs_run_command_script vig_grunt_01/vig_grunt01_plasma 
+	Grunt01_Reaction01)
+	(cs_queue_command_script vig_grunt_01/vig_grunt01_plasma  Grunt01_React_Player)
+	
+	(sleep_until (= MarineDied 2))
+
+	(cs_run_command_script vig_grunt_01/vig_grunt01_plasma
+	Grunt01_Reaction02)
+	(cs_queue_command_script vig_grunt_01/vig_grunt01_plasma  Grunt01_React_Player)
+
+	(sleep_until (= MarineDied 3))
+
+	(cs_run_command_script vig_grunt_01/vig_grunt01_plasma 
+	Grunt01_Reaction03)
+	(cs_queue_command_script vig_grunt_01/vig_grunt01_plasma  Grunt01_React_Player)
+	
+	(sleep_until (= MarineDied 4))
+
+	(cs_run_command_script vig_grunt_01/vig_grunt01_plasma 
+	Grunt01_Reaction04)
+	(cs_queue_command_script vig_grunt_01/vig_grunt01_plasma  Grunt01_React_Player)	
+)
+
+(script command_script Grunt01_Reaction01
+
+	(sound_impulse_start sound\dialog\test\vingette_mockup\v01_grunt_01_react_01 (list_get (ai_actors vig_grunt_01/vig_grunt01_plasma) 0) 1)
+					
+	(custom_animation (ai_get_unit 
+	vig_grunt_01/vig_grunt01_plasma) objects\characters\grunt\vignette\vignette "v01_grunt_01_react_01" false )
+
+	(sleep (unit_get_custom_animation_time (ai_get_unit vig_grunt_01/vig_grunt01_plasma)))
+			
+	(custom_animation_loop (ai_get_unit 
+	vig_grunt_01/vig_grunt01_plasma) objects\characters\grunt\vignette\vignette "v01_grunt_01_idle" false )
+	
+	(cs_abort_on_alert true)
+	(sleep_forever)
+)
+	
+(script command_script Grunt01_Reaction02
+	
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_grunt_01_react_02 (list_get (ai_actors vig_grunt_01/vig_grunt01_plasma) 0) 1)
+							
+	(custom_animation (ai_get_unit vig_grunt_01/vig_grunt01_plasma) objects\characters\grunt\vignette\vignette 
+	"v01_grunt_01_react_02" false )
+	
+	(sleep (unit_get_custom_animation_time (ai_get_unit vig_grunt_01/vig_grunt01_plasma)))
+				
+	(custom_animation_loop (ai_get_unit vig_grunt_01/vig_grunt01_plasma) 
+	objects\characters\grunt\vignette\vignette "v01_grunt_01_idle" false )
+
+	(cs_abort_on_alert true)
+	(sleep_forever)
+)
+
+(script command_script Grunt01_Reaction03
+					
+	(sound_impulse_start sound\dialog\test\vingette_mockup\v01_grunt_01_react_03 
+	(list_get (ai_actors vig_grunt_01/vig_grunt01_plasma) 0) 1)	
+								
+	(custom_animation (ai_get_unit vig_grunt_01/vig_grunt01_plasma) objects\characters\grunt\vignette\vignette 
+	"v01_grunt_01_react_03" false )
+		
+	(sleep (unit_get_custom_animation_time (ai_get_unit vig_grunt_01/vig_grunt01_plasma)))
+					
+	(custom_animation_loop (ai_get_unit vig_grunt_01/vig_grunt01_plasma) 
+	objects\characters\grunt\vignette\vignette "v01_grunt_01_idle" false )
+
+	(cs_abort_on_alert true)
+	(sleep_forever)
+)
+
+(script command_script Grunt01_Reaction04
+
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_grunt_01_react_brute_comm (list_get 
+	(ai_actors vig_grunt_01/vig_grunt01_plasma) 0) 1)	
+	
+	(custom_animation (ai_get_unit vig_grunt_01/vig_grunt01_plasma) objects\characters\grunt\vignette\vignette 
+	"v01_grunt_01_react_brute_comm" false )
+
+	(sleep (unit_get_custom_animation_time (ai_get_unit vig_grunt_01/vig_grunt01_plasma)))
+
+	(custom_animation_loop (ai_get_unit vig_grunt_01/vig_grunt01_plasma) 
+	objects\characters\grunt\vignette\vignette "v01_grunt_01_idle" false )
+
+	(cs_abort_on_alert true)
+	(sleep_forever)
+)
+
+(script command_script Grunt01_React_Player
+	(custom_animation (ai_get_unit vig_grunt_01/vig_grunt01_plasma) 
+	objects\characters\grunt\vignette\vignette 
+	"v01_grunt_01_react_player" false )
+	(sleep (unit_get_custom_animation_time (ai_get_unit vig_grunt_01/vig_grunt01_plasma)))
+)
+									
+;=========GRUNT02 SCRIPTS=========
+
+(script command_script Grunt02_Plasma_Loop_Init
+
+	(cs_enable_moving true)
+	(cs_enable_targeting true)
+	(cs_enable_looking true)
+
+	(custom_animation_loop (ai_get_unit vig_grunt_01/vig_grunt02_plasma) 
+	objects\characters\grunt\vignette\vignette 
+	"v01_grunt_02_idle" false )
+	
+	(cs_abort_on_alert true)
+	(sleep_forever)
+)
+
+(script dormant Grunt02_Reactions
+	
+	(cs_run_command_script vig_grunt_01/vig_grunt02_plasma 
+	Grunt02_Reaction01)
+	(cs_queue_command_script vig_grunt_01/vig_grunt02_plasma  Grunt02_React_Player)
+	
+	(sleep_until (= MarineDied 2))
+
+	(cs_run_command_script vig_grunt_01/vig_grunt02_plasma
+	Grunt02_Reaction02)
+	(cs_queue_command_script vig_grunt_01/vig_grunt02_plasma  Grunt02_React_Player)
+
+	(sleep_until (= MarineDied 3))
+	(print "sleepuntil3")
+	
+	(cs_run_command_script vig_grunt_01/vig_grunt02_plasma 
+	Grunt02_Reaction03)
+	(cs_queue_command_script vig_grunt_01/vig_grunt02_plasma  Grunt02_React_Player)
+	
+	(sleep_until (= MarineDied 4))
+	(print "sleepuntil4")
+	(cs_run_command_script vig_grunt_01/vig_grunt02_plasma 
+	Grunt02_Reaction04)
+	(cs_queue_command_script vig_grunt_01/vig_grunt02_plasma  Grunt02_React_Player)	
+
+	(cs_abort_on_alert true)
+	(sleep_forever)
+)
+
+(script command_script Grunt02_Reaction01
+
+	(print "Grunt02_Reaction01")
+
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_grunt_02_react_01 (list_get 
+	(ai_actors vig_grunt_01/vig_grunt02_plasma) 0) 1)
+					
+	(custom_animation (ai_get_unit 
+	vig_grunt_01/vig_grunt02_plasma) 
+	objects\characters\grunt\vignette\vignette "v01_grunt_02_react_01" false )
+
+	(sleep (unit_get_custom_animation_time (ai_get_unit 
+	vig_grunt_01/vig_grunt02_plasma)))
+			
+	(custom_animation_loop (ai_get_unit 
+	vig_grunt_01/vig_grunt02_plasma) 
+	objects\characters\grunt\vignette\vignette "v01_grunt_02_idle" false )
+
+	(cs_abort_on_alert true)
+	(sleep_forever)	
+)
+	
+(script command_script Grunt02_Reaction02
+
+	(print "Grunt02_Reaction02")
+	
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_grunt_02_react_02 (list_get 
+	(ai_actors vig_grunt_01/vig_grunt02_plasma) 0) 1)
+							
+	(custom_animation (ai_get_unit 
+	vig_grunt_01/vig_grunt02_plasma) objects\characters\grunt\vignette\vignette 
+	"v01_grunt_02_react_02" false )
+	
+	(sleep (unit_get_custom_animation_time (ai_get_unit 
+	vig_grunt_01/vig_grunt02_plasma)))
+				
+	(custom_animation_loop (ai_get_unit 
+	vig_grunt_01/vig_grunt02_plasma) 
+	objects\characters\grunt\vignette\vignette "v01_grunt_02_idle" false )
+	
+	(cs_abort_on_alert true)
+	(sleep_forever)	
+)
+
+(script command_script Grunt02_Reaction03
+
+	(print "Grunt02_Reaction03")
+					
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_grunt_02_react_03 
+	(list_get (ai_actors vig_grunt_01/vig_grunt02_plasma) 0) 1)	
+								
+	(custom_animation (ai_get_unit 
+	vig_grunt_01/vig_grunt02_plasma) objects\characters\grunt\vignette\vignette 
+	"v01_grunt_02_react_03" false )
+		
+	(sleep (unit_get_custom_animation_time (ai_get_unit 
+	vig_grunt_01/vig_grunt02_plasma)))
+					
+	(custom_animation_loop (ai_get_unit 
+	vig_grunt_01/vig_grunt02_plasma) 
+	objects\characters\grunt\vignette\vignette "v01_grunt_02_idle" false )
+
+	(cs_abort_on_alert true)
+	(sleep_forever)	
+)
+
+(script command_script Grunt02_Reaction04
+	
+	(print "Grunt02_Reaction04")
+	
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_grunt_02_react_brute_comm (list_get 
+	(ai_actors vig_grunt_01/vig_grunt02_plasma) 0) 1)	
+	
+	(custom_animation (ai_get_unit vig_grunt_01/vig_grunt02_plasma) objects\characters\grunt\vignette\vignette 
+	"v01_grunt_02_react_brute_comm" false )
+
+	(sleep (unit_get_custom_animation_time (ai_get_unit 
+	vig_grunt_01/vig_grunt02_plasma)))
+
+	(custom_animation_loop (ai_get_unit 
+	vig_grunt_01/vig_grunt02_plasma) 
+	objects\characters\grunt\vignette\vignette "v01_grunt_02_idle" false )
+
+	(cs_abort_on_alert true)
+	(sleep_forever)	
+)
+
+(script command_script Grunt02_React_Player
+	(custom_animation (ai_get_unit vig_grunt_01/vig_grunt02_plasma) 
+	objects\characters\grunt\vignette\vignette 
+	"v01_grunt_02_react_player" false )
+	(sleep (unit_get_custom_animation_time (ai_get_unit 
+	vig_grunt_01/vig_grunt02_plasma)))
+)
+
+;=======================================
+
+
+(script dormant Marine02_b_Reactions
+	(custom_animation_loop (ai_get_unit 
+	vig_marine_02/vig_marine_02_b) 
+	objects\characters\marine\vignette\vignette 
+	"v01_marine_02_helpless" false )
+	
+	(custom_animation (ai_get_unit vig_marine_02/vig_marine_02_b) 
+	objects\characters\marine\vignette\vignette "v01_marine_02_react_01" false )
+			
+	(sleep (unit_get_custom_animation_time (ai_get_unit vig_marine_02/vig_marine_02_b)))
+	
+	(custom_animation_loop (ai_get_unit vig_marine_02/vig_marine_02_b) 
+	objects\characters\marine\vignette\vignette "v01_marine_02_react_01_idle" false )
+	(sleep_forever)		
+)	
+		
+(script dormant Marine02_c_Reactions
+
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_marine_03_react_01 (list_get 
+	(ai_actors vig_marine_02/vig_marine_02_c) 0) 1)
+		
+	(custom_animation (ai_get_unit vig_marine_02/vig_marine_02_c) 
+	objects\characters\marine\vignette\vignette "v01_marine_03_react_01" false )
+					
+	(sleep (unit_get_custom_animation_time (ai_get_unit vig_marine_02/vig_marine_02_c)))
+					
+	(custom_animation_loop (ai_get_unit vig_marine_02/vig_marine_02_c) 
+	objects\characters\marine\vignette\vignette 
+	"v01_marine_03_react_01_idle" false )	
+	
+	(sleep_until (= MarineDied 2))				
+	
+	(sound_impulse_start 
+	sound\dialog\test\vingette_mockup\v01_marine_03_react_02 (list_get 
+	(ai_actors vig_marine_02/vig_marine_02_c) 0) 1)
+		
+	(custom_animation (ai_get_unit vig_marine_02/vig_marine_02_c) 
+	objects\characters\marine\vignette\vignette "v01_marine_03_react_02" false )
+						
+	(sleep (unit_get_custom_animation_time (ai_get_unit vig_marine_02/vig_marine_02_c)))
+						
+	(custom_animation_loop (ai_get_unit vig_marine_02/vig_marine_02_c) 
+	objects\characters\marine\vignette\vignette "v01_marine_03_react_01_idle" false )
+	(sleep_forever)
+									
+)

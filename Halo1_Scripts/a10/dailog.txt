@@ -1,0 +1,149 @@
+Doug: Stand back, I'm cracking the casket. - sound\dialog\tech_2\hud_help_1
+
+Doug: All the prelims look good, ready for the diagnostic start-up sequence? - sound\dialog\tech_2\hud_help_2
+
+Bob: I'm getting some stutter on the adrenal inhibitors.  We can fix them later. - sound\dialog\tech_1\hud_help_3
+
+Doug: Ok, I'll bring his self-diagnostics online. - sound\dialog\tech_2\hud_help_4
+
+Doug: I'm going to switch on the health monitors in his power-suit, Bob. - sound\dialog\tech_2\hud_health_1
+
+Bob: All the readouts look fine, vital signs are normal, no freezer burn. - sound\dialog\tech_1\hud_health_2
+
+Doug: Good.  Diagnostic 17, health monitors, check. - sound\dialog\tech_2\hud_health_3
+
+Doug: Ready for the energy shields? - sound\dialog\tech_2\hud_shield_1
+
+Bob: Give me a second to get clear. - sound\dialog\tech_1\hud_shield_2
+
+Bob: Allright, light him up. - sound\dialog\tech_1\hud_shield_3
+
+Bob: Ok, they're fully charged.  I'll reset them to test the automatic recharge. - sound\dialog\tech_1\hud_shield_4
+
+Bob: Shields are recharging correctly. - sound\dialog\tech_1\hud_shield_5
+
+Doug: Diagnostic 16, energy shields, check - sound\dialog\tech_2\hud_shiel6_3
+
+Cortana: All hands, report to assigned containment units, Covenant boarding pods imminent. - sound\dialog\cortana\looking_1
+
+Doug: We'd better hurry. - sound\dialog\tech_1\looking_2
+
+Bob: Let's skip the low priority tests and go straight to optical.  Cut the neural blockers for his head and neck. - sound\dialog\tech_1\looking_3
+
+Doug: Check. - sound\dialog\tech_2\looking_4
+
+Bob: Sorry for the quick thaw, sir, the disorientation should go away quickly.  Can you look around yet? - sound\dialog\tech_1\looking_5
+
+Doug: Optical systems look fine.  Diagnostic 15, check - sound\dialog\tech_2\looking_6
+
+Cortana: Covenant boarding pods encountered on starboard decks 4 7 and 12, and port decks 5 and 9.  Containment units respond. - sound\dialog\tech_1\looking_targeted_1
+
+Bob: Now we need to check your targeting sub-system.  Look up for me, please. - sound\dialog\tech_1\looking_targeted_2
+
+Bob: Ok.  Now look down? - sound\dialog\tech_1\looking_targeted_3
+
+Bob: Good. - sound\dialog\tech_1\looking_targeted_4
+
+Doug: Hey Bob?  I'm getting some calibration errors so I'm going to try reversing the pitch on his optical servos.  Can you administer the test again? - sound\dialog\tech_2\looking_inverted_1
+
+Bob: um...sure.  Sorry about this, commander, could you look up for me again? - sound\dialog\tech_1\looking_inverted_2
+
+Bob: Good.  Look down now? - sound\dialog\tech_1\looking_inverted_3
+
+Bob: Ok.  Thank you, sir. - sound\dialog\tech_1\looking_inverted_4
+
+Doug: Sir, should I leave the pitch inverted or switch it back? - sound\dialog\tech_2\looking_inverted_choice_1
+
+Doug: Ok, we'll leave it inverted, but I'll mark it in the report. - sound\dialog\tech_2\looking_inverted_choice_2a
+
+Doug: Ok, we'll turn off the inversion, but I'll mark it in the report. - sound\dialog\tech_2\looking_inverted_choice_2b
+
+Bob: Doug, go ahead and cut the rest of the neural blockers. - sound\dialog\tech_1\moving_forward_1
+
+Doug: Check - sound\dialog\tech_2\moving_forward_2
+
+Bob: Could you climb out of your cryo-chamber, please? - sound\dialog\tech_1\moving_forward_3
+
+Bob: Step over here, please. - sound\dialog\tech_1\moving_forward_4
+
+Bob: Thank you. - sound\dialog\tech_1\moving_forward_5
+
+Doug: Muscle enhancments are reading normal.  Diagnostic 12, musculo-skeletal systems, check. - sound\dialog\tech_2\moving_forward_6
+
+Cortana: Covenant boarding pods on starboard decks 3 4 and 6, and port decks 2 and 7. - sound\dialog\cortana\moving_jump_1
+
+Doug: Port 7...that's our deck. - sound\dialog\tech_1\moving_jump_2
+
+Bob: I know.  Skip the strength diagnostics, get ready to do gyroscopics and hydraulics. - sound\dialog\tech_1\moving_jump_2
+
+Doug: ok....uh....ok, go. - sound\dialog\tech_2\moving_jump_3
+
+Bob: Sir, just jump up and down so we can get a reading - sound\dialog\tech_1\moving_jump_4
+
+Doug: Ok.  Diagnostics...uh...7 and 6, gyroscopics and hydraulics, check. - sound\dialog\tech_2\moving_jump_5
+
+Doug: Bob, Cortana says to send the Commander to the bridge, right now! - sound\dialog\tech_2\cryo_explosion_1
+
+Bob: What about the comm and proc tests? - sound\dialog\tech_1\cryo_explosion_2
+
+Cortana: Secondary containment teams to port decks 7 (and 8.) - sound\dialog\cortana\cryo_explosion_3
+
+Doug: Leave the diagnostics running, but we need to get out of here before the Covenant... - sound\dialog\tech_2\cryo_explosion_3
+
+pound pound pound - sound\effect\door_pounding
+
+Doug: Too late, they're here!  Get to the bridge! - sound\dialog\tech_2\cryo_explosion_4
+
+pound, pound, crunch - sound\effect\door_crunching
+
+Doug: Noooooo! - sound\dialog\tech_2\cryo_explosion_5
+
+Bob: We've gotta get out of here! - sound\dialog\tech_1\damage_explosion_1
+
+Bob: Hurry, we have to get to the bridge! - sound\dialog\tech_1\damage_explosion_2
+
+Crewman #1: Run!  They're right behind us! - sound\dialog\tech_1\containment_1_1
+
+Marine #1: Close the blast doors! - sound\dialog\tech_1\containment_1_2
+
+Crewman #2: Wait for me! - sound\dialog\tech_1\containment_1_3
+
+Marine #1: Private Cash to bridge, they've breached the perimeter. - sound\dialog\tech_1\containment_1_4
+
+Cortana: All bridge deck containment teams, fall back to secondary perimeter. - sound\dialog\tech_1\containment_1_5
+
+Crewman #2: Stop running, we have to hold them here! - sound\dialog\marine\crossfire_1
+
+Marine #2: Who the hell?! - sound\dialog\marine\crossfire_2
+
+Johnson: Hold your fire! - sound\dialog\marine\crossfire_3
+
+Johnson: The Captain wants you on the bridge, sir. - sound\dialog\marine\crossfire_4
+
+Johnson: Ok dirtbags, stop scratching your asses and get those barricades up. - sound\dialog\marine\crossfire_5
+
+Marine #3: Everybody fall back! - sound\dialog\marine\crossfire_6
+
+Marine #4: Waste 'em! - sound\dialog\marine\crossfire_7
+
+Marine #3: I think you got them! - sound\dialog\marine\crossfire_8
+
+Marine #4: Holy fuck! - sound\dialog\marine\crossfire_9
+
+Marine #3: Sir, please come with me to the bridge! - sound\dialog\marine\crossfire_10
+
+Jenkins: Turkey day!  Why did they have to attack on turkey day?!  I love turkey day! - sound\dialog\jenkins\flavor_cafeteria_1
+
+Medoza: Hey Bisenti, why did the Smiley cross the road? - sound\dialog\mendoza\flavor_cafeteria_2
+
+Bisenti: <grunt> - sound\dialog\bisenti\flavor_cafeteria_3
+
+Medoza: To declare a jihad on the heretic chicken barbarian. - sound\dialog\mendoza\flavor_cafeteria_4
+
+Bisenti: That's not funny... - sound\dialog\bisenti\flavor_cafeteria_5
+
+Medoza: Hey Bisenti, how many Smilies does it take to change a lightbulb? - sound\dialog\mendoza\flavor_cafeteria_6
+
+Medoza: One Smiley to unscrew the old light bulb and five hundred thousand to wipe out a civilized planet and steal a new one. - sound\dialog\mendoza\flavor_cafeteria_7
+
+

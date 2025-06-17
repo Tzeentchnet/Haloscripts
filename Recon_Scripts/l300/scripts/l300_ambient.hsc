@@ -1,0 +1,70 @@
+
+
+(script dormant ambient_overhead_cruiser01
+	(sleep_until (volume_test_players ambient_cruiser01_vol)5)
+	(object_create_anew cov_cruiser_mac01)
+	(object_set_always_active cov_cruiser_mac01 TRUE)
+	(object_cinematic_visibility cov_cruiser_mac01 TRUE)
+	(sleep 1)
+	(device_set_position cov_cruiser_mac01 1)
+	(sleep_until (>= (device_get_position cov_cruiser_mac01) 0.175)1)
+	(flock_create flock_banshees00)
+	(flock_start flock_banshees00)
+	(sleep_until (>= (device_get_position cov_cruiser_mac01) 0.325)1)
+	(flock_create flock_banshees01)
+	(flock_start flock_banshees01)
+	(flock_stop flock_banshees00)
+	(sleep_until (>= (device_get_position cov_cruiser_mac01) 0.6)1)
+	(flock_stop flock_banshees01)
+	
+)
+
+
+(script dormant ambient_overhead_cruiser02
+	(sleep_until (volume_test_players ambient_cruiser02_vol)5)
+	
+	(object_create_anew cov_cruiser_mac02)
+	(object_set_always_active cov_cruiser_mac02 TRUE)
+	(object_cinematic_visibility cov_cruiser_mac02 TRUE)
+	(sleep 1)
+	(device_set_position cov_cruiser_mac02 1)
+	(sleep_until (>= (device_get_position cov_cruiser_mac02) 0.35)1)
+	(flock_create flock_banshees02)
+	(flock_start flock_banshees02)
+	(sleep_until (>= (device_get_position cov_cruiser_mac02) 0.5)1)
+	(flock_create flock_banshees03)
+	(flock_start flock_banshees03)
+	(flock_stop flock_banshees02)
+	(sleep_until (>= (device_get_position cov_cruiser_mac02) 0.7)1)
+	(flock_stop flock_banshees03)
+	
+)
+(script dormant ambient_overhead_cruiser03
+	(sleep_until (volume_test_players ambient_cruiser03_vol)5)
+	(game_save)
+	(object_create_anew cov_cruiser_mac03)
+	(object_set_always_active cov_cruiser_mac03 TRUE)
+	(object_cinematic_visibility cov_cruiser_mac03 TRUE)
+	(sleep 1)
+	(device_set_position cov_cruiser_mac03 1)
+	(sleep_until (>= (device_get_position cov_cruiser_mac03) 0.2)1)
+	(flock_create flock_banshees04)
+	(flock_start flock_banshees04)
+	(sleep_until (>= (device_get_position cov_cruiser_mac03) 0.35)1)
+	(flock_create flock_banshees05)
+	(flock_start flock_banshees05)
+	(flock_stop flock_banshees04)
+	(sleep_until (>= (device_get_position cov_cruiser_mac03) 0.6)1)
+	(flock_stop flock_banshees05)
+)
+
+(script startup capital_ship_flyover
+	(test_all_doors_open)
+	(sleep_until (volume_test_players ambient_carrier01_vol)1)
+    (object_set_always_active capship01 TRUE)
+	(scenery_animation_start capship01 objects\levels\atlas\l300\cov_capital_ship\cov_capital_ship entry)
+	(object_set_custom_animation_speed capship01 0.5)
+;	(sleep_until (volume_test_players ambient_carrier02_vol)1)
+;	(object_set_custom_animation_speed capship01 0.2)
+	
+)

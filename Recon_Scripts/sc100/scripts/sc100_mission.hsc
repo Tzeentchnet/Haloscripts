@@ -1,0 +1,435 @@
+;===========================================================================
+;================================== GLOBAL VARIABLES ================================================================================================================================================
+;====================================================================================================================================================================================================
+(global boolean editor FALSE)
+
+(global boolean g_play_cinematics TRUE)
+(global boolean g_player_training TRUE)
+(global boolean play_test_bool TRUE)
+
+(global boolean debug TRUE)
+(global boolean dialogue TRUE)
+(global boolean music TRUE)
+
+; insertion point index 
+(global short g_insertion_index 0)
+
+; objective control global shorts
+(global short g_train01_obj_control 0)
+(global short g_train02_obj_control 0)
+(global short g_train03_obj_control 0)
+(global short g_train04_obj_control 0)
+(global short g_train05_obj_control 0)
+
+(global real g_nav_offset 0.55)
+
+;====================================================================================================================================================================================================
+;================================== GAME PROGRESSION VARIABLES ================================================================================================================================================
+;====================================================================================================================================================================================================
+;*
+these variables are defined in the .game_progression tag in \globals 
+
+
+====== INTEGERS ======
+
+g_scenario_location 
+
+- set the scene transition integer equal to the scene number
+- when transitioning from sc120 set g_scene_transition = 120 
+
+====== BOOLEANS ======
+g_l100_complete 
+
+g_h100_complete 
+
+g_sc100_complete 
+g_sc110_complete 
+g_sc120_complete 
+g_sc130_complete 
+g_sc140_complete 
+g_sc150_complete 
+g_sc160_complete 
+
+g_l200_complete 
+
+g_h200_complete 
+
+g_sc200_complete 
+g_sc210_complete 
+g_sc220_complete 
+g_sc230_complete 
+
+g_l300_complete 
+
+*;
+
+;====================================================================================================================================================================================================
+;====================================================================================================================================================================================================
+;=============================== SCENE sc100 MISSION SCRIPT ==============================================================================================================================================
+;====================================================================================================================================================================================================
+;====================================================================================================================================================================================================
+
+(script startup sc100_startup
+	(if debug (print "sc100 mission script") (print "NO DEBUG"))
+	(ai_allegiance human player)
+	(ai_allegiance player human)
+	; fade out 
+	(fade_out 0 0 0 0)
+
+	;if survival_mode switch to appropriate scripts
+	;*(if (campaign_survival_enabled)
+		(begin 
+			(launch_survival_mode)
+			(sleep_forever)
+		)
+	)*;
+	; global variable for the hub
+	(gp_integer_set gp_current_scene 100)
+	(wake object_management)	
+		; === PLAYER IN WORLD TEST =====================================================
+		(if	(and
+				(not editor)
+				(> (player_count) 0)
+			)
+			; if game is allowed to start 
+			(start)
+			
+			(fade_in 0 0 0 0)
+			
+		)
+
+	(if (not (game_is_cooperative))
+		(begin
+			(print "placing Starting AIs")
+		)
+	)
+		
+		; === PLAYER IN WORLD TEST =====================================================
+
+			(sleep_until (>= g_insertion_index 1) 1)
+		;==== begin cell_1_a (insertion 1) 
+			
+			(if (= g_insertion_index 1) (wake enc_training01))
+			(sleep_until	(or
+							(volume_test_players 
+							enc_training02_vol01)
+							(>= g_insertion_index 2)
+						)
+			1)
+			
+			(if (<= g_insertion_index 2) (wake enc_training02))	
+;*
+			(sleep_until	(or
+							(volume_test_players 
+							enc_training03_vol01)
+							(>= g_insertion_index 3)
+						)
+			1)
+			
+			(if (<= g_insertion_index 3) (wake enc_training03))
+
+			(sleep_until	(or
+							(volume_test_players 
+							enc_training04_vol01)
+							(>= g_insertion_index 4)
+						)
+			1)
+			
+			(if (<= g_insertion_index 4) (wake enc_training04))				
+
+			(sleep_until	(or
+							(volume_test_players 
+							enc_training05_vol01)
+							(>= g_insertion_index 5)
+						)
+			1)
+			
+			(if (<= g_insertion_index 5) (wake enc_training05))
+*;						
+)
+
+(script static void start
+	(print "starting")
+
+	; play cinematic 
+		(if (= g_play_cinematics TRUE)
+			(begin
+				(if (cinematic_skip_start)
+					(begin
+						;fade to black
+						(cinematic_snap_to_black)
+						(if debug (print "sc100_in_sc"))	
+							(sleep 60)	
+						(cinematic_set_title title_1)
+							(sleep 60)
+						(cinematic_set_title title_2)
+						(sleep (* 30 5))
+						(sc100_in_sc)
+					)
+				)
+				(cinematic_skip_stop)
+			)
+		)
+	(sleep 1)
+	(cinematic_fade_to_gameplay)
+	(ins_level_start)
+)
+
+(script dormant enc_training01
+	(data_mine_set_mission_segment "sc100_01_enc_training01")
+	(print "data_mine_set_mission_segment sc100_01_enc_training01")
+;	(ai_grenades FALSE)
+	(game_save)
+	(wake md_010_initial)
+	(ai_place Training01_Squad00)
+	(ai_place Training01_Squad01)
+	(ai_place Training01_Squad02)	
+	(ai_place Training01_Marines01)
+	(wake enc_training01_reinforcements)
+;	(wake enc_training01_marine_die)
+	(ai_magically_see Training01_Marines01 Training01_Squad01)
+	(ai_magically_see Training01_Squad01 Training01_Marines01)
+	
+	(sleep_until (volume_test_players training01_oc_01_vol)1)
+	(set g_train01_obj_control 1)
+	(print "g_train01_obj_control 1")
+
+	(sleep_until (volume_test_players training01_oc_02_vol)1)
+	(set g_train01_obj_control 2)
+	(print "g_train01_obj_control 2")
+	(game_save)
+	(sleep_until (volume_test_players training01_oc_03_vol)1)
+	(set g_train01_obj_control 3)
+	(print "g_train01_obj_control 3")		
+)
+
+(script dormant enc_training01_marine_die
+	; this script no longer called
+	(sleep_until (volume_test_players enc_training01_vol01)5)
+	(ai_place Training01_Squad02)
+	(units_set_maximum_vitality (ai_actors Training01_Marines01) .1 0)				
+	(units_set_current_vitality (ai_actors Training01_Marines01) .1 0)	
+)
+
+(script dormant enc_training01_reinforcements
+	(sleep_until (volume_test_players enc_training01_vol02)5)
+	(ai_place Training01_Squad03)
+)
+
+(script dormant enc_training02
+	(data_mine_set_mission_segment "sc100_02_enc_training02")
+	(print "data_mine_set_mission_segment sc100_02_enc_training02")	
+	(game_save)
+	(ai_place Training02_Squad01)
+	(ai_place Training02_Squad06)
+	(ai_place Training02_Squad02)
+	(ai_place Training02_Squad03)	
+	(ai_place Training02_Squad04)
+	(ai_place Training02_Squad07)
+	(if (not play_test_bool) (wake md_020_post))
+	(wake enc_training02_brute_reinf)
+	(wake md_020_grunt_sleep)
+	(wake md_020_brute)
+	(wake md_020_turret)
+	(if play_test_bool (wake playtest_end))
+	(sleep_until (volume_test_players training02_oc_01_vol)1)
+	(set g_train02_obj_control 1)
+	(print "g_train02_obj_control 1")
+	(sleep_until (volume_test_players training02_oc_02_vol)1)
+	(set g_train02_obj_control 2)
+	(print "g_train02_obj_control 2")
+	(game_save)
+	(sleep_until (volume_test_players training02_oc_03_vol)1)
+	(set g_train02_obj_control 3)
+	(print "g_train02_obj_control 3")
+
+	(sleep_until (volume_test_players training02_oc_04_vol)1)
+	(set g_train02_obj_control 4)
+	(print "g_train02_obj_control 4")
+	
+	(sleep_until (volume_test_players training02_oc_05_vol)1)
+	(set g_train02_obj_control 5)
+	(print "g_train02_obj_control 5")			
+
+)
+(script dormant enc_training02_brute_reinf
+	(sleep_until (or (< (ai_living_count Training02_Squad01) 4) 
+	(volume_test_players enc_training02_vol01_5)) 5)
+	(ai_place Training02_Squad05)
+	(vs_enable_pathfinding_failsafe Training02_Squad05 true)
+	(vs_walk Training02_Squad05 true)	
+	(vs_go_to Training02_Squad05 true training02_brute/p0)
+	(vs_abort_on_alert Training02_Squad05 true)
+	(vs_pause Training02_Squad05 true 600)	
+)
+(script dormant playtest_end
+	(sleep_until (or (< (ai_living_count Training02_Group) 1) 
+	(volume_test_players playtest_end_vol)) 5)
+	(player_control_fade_out_all_input 3)	
+	(fade_out 0 0 0 120)
+	(sleep 150)
+	(end_scene)
+)	
+
+(script dormant enc_training03
+	(data_mine_set_mission_segment "sc100_03_enc_training03")
+	(print "data_mine_set_mission_segment sc100_03_enc_training03")
+;	(ai_grenades TRUE)	
+	(game_save)
+	(ai_place Training03_Group)
+	(wake md_030_mid_jackal)
+	(wake md_030_door)
+;	(ai_place Training03_Squad01)
+;	(ai_place Training03_Squad02)
+	(sleep_forever md_010_marine_dialog)
+	
+	(sleep_until (volume_test_players training03_oc_01_vol)1)
+	(set g_train03_obj_control 1)
+	(print "g_train03_obj_control 1")
+
+	(sleep_until (volume_test_players training03_oc_02_vol)1)
+	(set g_train03_obj_control 2)
+	(print "g_train03_obj_control 2")
+
+	(sleep_until (volume_test_players training03_oc_03_vol)1)
+	(set g_train03_obj_control 3)
+	(print "g_train03_obj_control 3")
+
+	(sleep_until (volume_test_players training03_oc_04_vol)1)
+	(set g_train03_obj_control 4)
+	(print "g_train03_obj_control 4")		
+
+)
+
+(script dormant enc_training04
+	(sleep_until (or (= g_insertion_index 4)(> (device_get_position 
+	hub_door_080_01) 0)) 1)
+	(data_mine_set_mission_segment "sc100_04_enc_training04")
+	(print "data_mine_set_mission_segment sc100_04_enc_training04")	
+	(game_save)
+	(ai_place Training04_Squad01)
+	(ai_place Training04_Squad02)
+	(ai_place Training04_Squad03)
+	(ai_place Training04_Squad04)
+	(ai_place Training04_Squad05)
+	(ai_place Training04_Squad06)
+	(ai_place Training04_Squad07)
+	(ai_place Training04_Squad08)
+	(ai_place Training04_Squad09)
+	(ai_place Training04_Squad12)		
+	(ai_place Training04_Marines01)
+	(ai_place Training04_Marines02)
+	(ai_disregard (ai_actors Training04_Marines02) true)
+
+	(sleep_forever md_020_grunt_sleep)
+	(sleep_forever md_020_brute)
+	(sleep_forever md_020_turret)
+	
+	(wake md_040_init)
+	(wake enc_training04_reinforcements)
+	(sleep 1)
+
+	;a small hack that gives the player a small amount of 
+	; time/distance before the enemy attacks them
+	(wake enc_training04_target_player) 
+	
+	(sleep_until (volume_test_players training04_oc_01_vol)1)
+	(set g_train04_obj_control 1)
+	(print "g_train04_obj_control 1")
+	(game_save)
+
+	(sleep_until (volume_test_players training04_oc_02_vol)1)
+	(set g_train04_obj_control 2)
+	(print "g_train04_obj_control 2")
+	(game_save)
+
+	(sleep_until (volume_test_players training04_oc_03_vol)1)
+	(set g_train04_obj_control 3)
+	(print "g_train04_obj_control 3")
+	(game_save)
+
+	(sleep_until (volume_test_players training04_oc_04_vol)1)
+	(set g_train04_obj_control 4)
+	(print "g_train04_obj_control 4")		
+	(game_save)
+
+)
+
+(script dormant enc_training04_target_player
+	(ai_disregard (players) true)
+	(ai_vitality_pinned Training04_Marines01)		
+	(print "PLAYER SAFETY")		
+	
+	(sleep_until (or (= (ai_living_count Training04_Marines01) 0) 
+				(volume_test_players enc_training04_wake01_vol)
+				(volume_test_players enc_training04_wake02_vol)				
+			)5 600)
+	(print "PLAYER SAFETY TIME UP")
+	(wake md_040_dare_location)		
+	(ai_disregard (players) false)
+	(units_set_current_vitality (ai_actors Training04_Marines01) .1 0)	
+	(units_set_maximum_vitality (ai_actors Training04_Marines01) .1 0)		
+)
+
+(script dormant enc_training04_reinforcements
+	(sleep_until (volume_test_players enc_training04_vol02)1)
+	(game_save)
+	(ai_place Training04_Squad11)
+	(sleep_until (volume_test_players enc_training04_vol03)1)
+	(game_save)	
+	(ai_place Training04_Squad10)
+	(sleep_until (or 
+		(< (ai_living_count Training04_Group) 1) 
+		(volume_test_players enc_training04_vol04)
+			) 5)
+	(ai_kill_silent Training04_Marines02)
+	(sleep_until (>= (current_zone_set_fully_active) 2) 5)
+	(sleep_forever md_040_dare_location)			
+	(game_save)	
+	(ai_place Training04_Squad13)
+	(ai_place Training04_Squad14)
+	(sleep 1)	
+	(device_set_position hub_door_080_02 1)
+	(sleep 90)
+	(wake md_040_dare_hunter)
+	
+)
+
+(script dormant enc_training05
+	(data_mine_set_mission_segment "sc100_05_enc_training05")
+	(print "data_mine_set_mission_segment sc100_05_enc_training05")	
+;	(ai_place Training05_Group)
+	(wake md_050_pod_reminder)
+	(sleep_forever md_030_mid_jackal)
+	(sleep_forever md_030_door)	
+	(sleep_until (volume_test_players enc_training05_vol02)1)
+	; Hub Global Mission Complete Variable
+	(gp_boolean_set gp_sc100_complete TRUE)
+	(end_scene)
+)
+
+(script dormant object_management
+	(if (= (current_zone_set) 0)
+		(print "OBJ_MGMT- Beginning")
+	)
+	(sleep_until (>= (current_zone_set) 1) 1)
+	(if (= (current_zone_set) 1)
+		(print "OBJ_MGMT- LOADING TRAINING04")
+	)
+	(sleep_until (>= (current_zone_set) 2) 1)
+	(if (= (current_zone_set) 2)
+		(begin
+			(device_set_position_immediate hub_door_080_01 0)
+			(device_set_power hub_door_080_01 0)							
+			(print "OBJ_MGMT- LOADING 050")
+		)
+	)
+	(sleep_until (>= (current_zone_set) 3) 1)
+	(if (= (current_zone_set) 3)
+		(begin
+;			(device_set_position_immediate sc140_door_15 0)
+;			(device_set_power sc140_door_15 0)		
+			(print "OBJ_MGMT- REMOVING 080")
+		)
+	)
+)

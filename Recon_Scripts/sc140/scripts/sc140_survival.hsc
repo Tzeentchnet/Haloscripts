@@ -1,0 +1,236 @@
+;=============================================================================================================================
+;================================================== GLOBALS ==================================================================
+;=============================================================================================================================
+;*
+(global boolean g_su_wave_spawn TRUE)
+
+(global short g_wave_number 0)
+(global short g_round_number 1)
+(global short g_set_number 1)
+
+(global short g_skull 0)
+
+(global short g_su_wave_limit 0)
+(global short g_su_wave_count 0)
+
+(global short g_wave_timer 0)
+
+(global short g_set_all 24)
+
+*;
+; starting player pitch 
+;(global short g_player_start_pitch -10)
+
+;=============================================================================================================================
+;============================================== STARTUP SCRIPTS ==============================================================
+;=============================================================================================================================
+
+(script static void launch_survival_mode
+
+	(wake start_survival)
+)
+
+(script continuous survival_recycle
+	(add_recycling_volume su_garbage_all 60 60)
+	(sleep 1500)
+)
+
+;starting up survival mode
+(script dormant start_survival
+	(fade_out 0 0 0 0)
+
+	
+	(print "SC140 Survival")
+	(switch_zone_set sc140_000_cinematic)
+	
+	(sleep 1)
+	
+;	(object_create_folder survival_mode_crates)
+;	(object_create_folder survival_mode_weapons)
+	(object_destroy_folder campaign_weapons)
+	(device_set_power sc140_door_02 1)
+	(device_set_power sc140_door_04 1)
+	(device_set_power sc140_door_05 1)
+	(device_set_power sc140_door_07 1)
+	(device_set_power sc140_door_08 0)
+	(device_set_power sc140_door_14 0)
+	
+;	(soft_ceiling_enable l200_survival TRUE)
+;	(kill_volume_enable kill_pipe_room)
+;	(kill_volume_enable kill_pipe_trough)
+	
+		(sleep 1)
+
+			; set player pitch 
+			(player0_set_pitch g_player_start_pitch 0)
+			(player1_set_pitch g_player_start_pitch 0)
+			(player2_set_pitch g_player_start_pitch 0)
+			(player3_set_pitch g_player_start_pitch 0)
+				(sleep 1)
+
+	;(cinematic_fade_to_gameplay)
+	(fade_in 0 0 0 30)
+	
+	(wake survival_mode_mission)
+	(sleep_forever)
+)
+
+;=============================================================================================================================
+;============================================ SURVIVAL SCRIPTS ===============================================================
+;=============================================================================================================================
+
+(script dormant survival_mode_mission
+		; snap to black 
+		(if (> (player_count) 0) (cinematic_snap_to_black))
+		(sleep 5)
+
+	; define the number of waves set up in sapien 
+		(set b_wave_initial_present TRUE)
+		(set b_wave_01_present TRUE)
+		(set b_wave_02_present TRUE)
+		(set b_wave_03_present TRUE)
+		(set b_wave_04_present FALSE)
+		(set b_wave_05_present FALSE)
+		(set b_wave_final_present TRUE)
+
+		
+	(sleep 1)
+		; mark phantom spawn waves 
+			(set b_wave_initial_phantom TRUE)
+			(set b_wave_01_phantom TRUE)
+			(set b_wave_02_phantom TRUE)
+			(set b_wave_03_phantom TRUE)
+			(set b_wave_04_phantom TRUE)
+			(set b_wave_05_phantom TRUE)
+			(set b_wave_final_phantom TRUE)
+		
+	(sleep 1)
+	
+	; assign phantom squads to global ai variables 
+		(set ai_sur_phantom_01 sq_sur_phantom_01)
+		(set ai_sur_phantom_02 sq_sur_phantom_02)
+		(set ai_sur_phantom_03 sq_sur_phantom_03)
+		(set ai_sur_phantom_04 sq_sur_phantom_04)
+
+	; assign squads to global variables 
+		(set ai_initial_squad_01 round1_grunt01)
+		(set ai_initial_squad_02 round1_grunt02)
+
+		(set ai_wave_01_squad_01 round2_grunt01)
+		(set ai_wave_01_squad_02 round2_brute01)
+
+		(set ai_wave_02_squad_01 round3_jackal01)
+		(set ai_wave_02_squad_02 round3_jackal02)
+
+		(set ai_wave_03_squad_01 round3_jackal01)
+		(set ai_wave_03_squad_02 round3_jackal02)
+
+		(set ai_wave_04_squad_01 round4_brute01)
+		(set ai_wave_04_squad_02 round4_brute02)
+		(set ai_wave_04_squad_03 round4_brute03)
+		(set ai_wave_04_squad_04 round4_brute04)		
+		
+		(set ai_final_squad_01 round5_hunter01)
+		(set ai_final_squad_02 round5_hunter02)
+		
+
+	; define weapon crates 
+	;*
+		(set sur_weapon_01 sc_survival_weapons_01)
+		(set sur_weapon_02 sc_survival_weapons_02)
+		(set sur_weapon_03 sc_survival_weapons_03)
+		(set sur_weapon_04 sc_survival_weapons_04)
+		(set sur_weapon_05 sc_survival_weapons_05)
+		(set sur_weapon_06 sc_survival_weapons_06)
+		(set sur_weapon_07 sc_survival_weapons_07)
+		(set sur_weapon_08 sc_survival_weapons_08)
+		(set sur_weapon_09 sc_survival_weapons_09)
+		(set sur_weapon_10 sc_survival_weapons_10)
+	*;
+	(sleep 1)
+
+		
+	(fade_in 0 0 0 15)
+
+	; Hacky bullshit!
+	
+	(ai_place survival_mode_phantom01)
+	(cs_run_command_script survival_mode_phantom01/pilot 01_phantom_drop)		
+	(ai_place survival_mode_phantom02)
+	(cs_run_command_script survival_mode_phantom02/pilot 02_phantom_drop)
+	(sleep 600)
+	; end hacky bullshit!
+	(wake survival_mode)
+	(sleep 90)
+	(set g_sur_wave_timer (* 30 15))
+
+	
+)
+
+
+;* respawning weapon crates after round ends
+(script static void survival_respawn_weapons
+	(object_create_anew survival_rocks)
+	(object_create_anew survival_sniper)
+	(sleep 1)
+	(object_create_anew survival_smg1)
+	(object_create_anew survival_smg2)
+	(sleep 1)
+	(object_create_anew survival_mag1)
+	(object_create_anew survival_mag2)
+)
+*;
+;===================================================== COMMAND SCRIPTS =========================================================
+(script dormant 01_phantom_a_test
+	(ai_place survival_mode_phantom01)
+	(cs_run_command_script survival_mode_phantom01/pilot 01_phantom_drop)
+)
+
+(script command_script 01_phantom_drop
+	(cs_enable_pathfinding_failsafe TRUE)
+	(cs_vehicle_speed 1)
+	(cs_fly_by survival_phantom_path_a/p0 5)
+	(cs_fly_by survival_phantom_path_a/p1 10)
+	
+	(cs_fly_to survival_phantom_path_a/p2 5)	
+
+	(cs_vehicle_speed 0.8)	
+
+	(cs_fly_to_and_face survival_phantom_path_a/p3 survival_phantom_path_a/p4)
+	(sleep 300)
+;	(ai_trickle_via_phantom survival_mode_phantom01/pilot round1_grunt01)
+;	(ai_trickle_via_phantom survival_mode_phantom01/pilot round3_jackal01)
+
+	(cs_vehicle_speed 1)
+	(cs_fly_to survival_phantom_path_a/p5 2)
+	(cs_vehicle_boost TRUE)		
+	(cs_fly_to survival_phantom_path_a/p6 2)	
+	(cs_vehicle_boost FALSE)
+	(ai_erase survival_mode_phantom01)
+)
+(script dormant 01_phantom_b_test
+	(ai_place survival_mode_phantom02)
+	(cs_run_command_script survival_mode_phantom02/pilot 02_phantom_drop)
+)
+(script command_script 02_phantom_drop
+	(cs_enable_pathfinding_failsafe TRUE)
+	(cs_vehicle_speed 1)
+	(cs_fly_by survival_phantom_path_b/p0 5)
+	(cs_fly_by survival_phantom_path_b/p1 10)
+	
+	(cs_fly_to survival_phantom_path_b/p2 5)	
+
+	(cs_vehicle_speed 0.8)	
+
+	(cs_fly_to_and_face survival_phantom_path_b/p3 survival_phantom_path_b/p4)
+	(sleep 300)
+;	(ai_trickle_via_phantom survival_mode_phantom01/pilot round1_grunt01)
+;	(ai_trickle_via_phantom survival_mode_phantom01/pilot round3_jackal01)
+
+	(cs_vehicle_speed 1)
+	(cs_fly_by survival_phantom_path_b/p5 2)
+	(cs_vehicle_boost TRUE)		
+	(cs_fly_to survival_phantom_path_b/p6 2)	
+	(cs_vehicle_boost FALSE)
+	(ai_erase survival_mode_phantom02)
+)

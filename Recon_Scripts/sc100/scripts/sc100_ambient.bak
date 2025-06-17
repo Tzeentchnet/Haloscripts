@@ -1,0 +1,443 @@
+; ===================================================================================================================================================
+; ===================================================================================================================================================
+; MISSION DIALOGUE 
+; ===================================================================================================================================================
+; ===================================================================================================================================================
+
+;*
++++++++++++++++++++++++
+ DIALOGUE INDEX 
++++++++++++++++++++++++
+
+md_010_initial
+md_010_marine_call
+md_010_marine_full
+md_010_marine_cont
+md_010_marine_end
+md_020_grunt_sleep
+md_020_brute
+md_020_turret
+md_020_post
+md_030_mid_jackal
+md_030_door
+md_040_init
+md_040_dare_location
+md_040_dare_hunter
+md_050_pod_reminder
++++++++++++++++++++++++
+*;
+
+(global ai brute NONE)
+(global ai fem NONE)
+(global ai marine NONE)
+
+; ===================================================================================================================================================
+
+
+(script dormant md_010_initial
+	(if debug (print "mission dialogue:010:initial"))
+
+	(sleep 1)
+
+		(if dialogue (print "DARE (radio): Buck, can you see my beacon?"))
+		(sleep (ai_play_line_on_object NONE SC100_0010))
+		(sleep 10)
+
+		(if dialogue (print "BUCK (helmet): It's in my visor if I need it."))
+		(sleep (ai_play_line_on_object NONE SC100_0020))
+		(sleep 10)
+
+		(if dialogue (print "DARE (radio): We missed our LZ. This grid's packed with Covenant. Be careful."))
+		(sleep (ai_play_line_on_object NONE SC100_0030))
+		(sleep 10)
+
+		(if dialogue (print "BUCK (helmet): I appreciate the concern."))
+		(sleep (ai_play_line_on_object NONE SC100_0040))
+		(sleep 10)
+
+		(if dialogue (print "DARE (radio): Won't be much a rescue if you're dead."))
+		(sleep (ai_play_line_on_object NONE SC100_0050))
+		(sleep 10)
+
+)
+
+; ===================================================================================================================================================
+
+(script dormant md_010_marine_call
+	(if debug (print "mission dialogue:010:marine:call"))
+
+		; cast the actors
+		(vs_cast SQUAD TRUE "SC100_0060")
+			(set marine (vs_role 1))
+
+	; movement properties
+	(vs_enable_pathfinding_failsafe gr_allies TRUE)
+	(vs_enable_looking gr_allies  TRUE)
+	(vs_enable_targeting gr_allies TRUE)
+	(vs_enable_moving gr_allies TRUE)
+
+	(sleep 1)
+
+		(if dialogue (print "MARINE: Trooper! Over here!"))
+		(vs_play_line marine TRUE SC100_0060)
+		(sleep 10)
+
+	; cleanup
+	(vs_release_all)
+)
+
+; ===================================================================================================================================================
+
+(script dormant md_010_marine_full
+	(if debug (print "mission dialogue:010:marine:full"))
+
+		; cast the actors
+		(vs_cast SQUAD TRUE "SC100_0070")
+			(set marine (vs_role 1))
+
+	; movement properties
+	(vs_enable_pathfinding_failsafe gr_allies TRUE)
+	(vs_enable_looking gr_allies  TRUE)
+	(vs_enable_targeting gr_allies TRUE)
+	(vs_enable_moving gr_allies TRUE)
+
+	(sleep 1)
+
+		(if dialogue (print "MARINE: Saw your pod hit. You're one lucky SOB."))
+		(vs_play_line marine TRUE SC100_0070)
+		(sleep 10)
+
+		(if dialogue (print "BUCK 01 (helmet): Seen any more come down?"))
+		(sleep (ai_play_line_on_object NONE SC100_0080))
+		(sleep 10)
+
+		(if dialogue (print "MARINE: Negative. But I didn't see much of anything after that flash."))
+		(vs_play_line marine TRUE SC100_0090)
+		(sleep 10)
+
+		(if dialogue (print "BUCK 02 (helmet): I gotta head out. You be alright?"))
+		(sleep (ai_play_line_on_object NONE SC100_0100))
+		(sleep 10)
+
+		(if dialogue (print "MARINE: Yeah."))
+		(vs_play_line marine TRUE SC100_0110)
+		(sleep 10)
+
+	; cleanup
+	(vs_release_all)
+)
+
+; ===================================================================================================================================================
+
+(script dormant md_010_marine_cont
+	(if debug (print "mission dialogue:010:marine:cont"))
+
+		; cast the actors
+		(vs_cast SQUAD TRUE "SC100_0120")
+			(set marine (vs_role 1))
+
+	; movement properties
+	(vs_enable_pathfinding_failsafe gr_allies TRUE)
+	(vs_enable_looking gr_allies  TRUE)
+	(vs_enable_targeting gr_allies TRUE)
+	(vs_enable_moving gr_allies TRUE)
+
+	(sleep 1)
+
+		(if dialogue (print "MARINE: But listen. Some of these buildings are open."))
+		(vs_play_line marine TRUE SC100_0120)
+		(sleep 10)
+
+		(if dialogue (print "MARINE: Should be able to get inside, flank the Covenant on the streets."))
+		(vs_play_line marine TRUE SC100_0130)
+		(sleep 10)
+
+		(if dialogue (print "BUCK (helmet): Roger that. Thanks."))
+		(sleep (ai_play_line_on_object NONE SC100_0140))
+		(sleep 10)
+
+	; cleanup
+	(vs_release_all)
+)
+
+; ===================================================================================================================================================
+
+(script dormant md_010_marine_end
+	(if debug (print "mission dialogue:010:marine:end"))
+
+		; cast the actors
+		(vs_cast SQUAD TRUE "SC100_0150")
+			(set marine (vs_role 1))
+
+	; movement properties
+	(vs_enable_pathfinding_failsafe gr_allies TRUE)
+	(vs_enable_looking gr_allies  TRUE)
+	(vs_enable_targeting gr_allies TRUE)
+	(vs_enable_moving gr_allies TRUE)
+
+	(sleep 1)
+
+		(if dialogue (print "MARINE: Go on! We'll be alright!"))
+		(vs_play_line marine TRUE SC100_0150)
+		(sleep 10)
+
+		(if dialogue (print "MARINE: Don't worry about us, Gunny! Get moving!"))
+		(vs_play_line marine TRUE SC100_0160)
+		(sleep 10)
+
+	; cleanup
+	(vs_release_all)
+)
+
+; ===================================================================================================================================================
+
+(script dormant md_020_grunt_sleep
+	(if debug (print "mission dialogue:020:grunt:sleep"))
+	
+	(sleep 1)
+
+		(if dialogue (print "BUCK (helmet): Naptime, huh? Let Daddy pat you on the back�"))
+		(sleep (ai_play_line_on_object NONE SC100_0170))
+		(sleep 10)
+
+)
+
+; ===================================================================================================================================================
+
+(script dormant md_020_brute
+	(if debug (print "mission dialogue:020:brute"))
+
+		; cast the actors
+		(vs_cast SQUAD TRUE "SC100_0180")
+			(set brute (vs_role 1))
+
+	; movement properties
+	(vs_enable_pathfinding_failsafe gr_allies TRUE)
+	(vs_enable_looking gr_allies  TRUE)
+	(vs_enable_targeting gr_allies TRUE)
+	(vs_enable_moving gr_allies TRUE)
+
+	(sleep 1)
+
+		(if dialogue (print "BRUTE: Faster, you whelps! Secure that building!"))
+		(vs_play_line brute TRUE SC100_0180)
+		(sleep 10)
+
+	; cleanup
+	(vs_release_all)
+)
+
+; ===================================================================================================================================================
+
+(script dormant md_020_turret
+	(if debug (print "mission dialogue:020:turret"))
+
+	(sleep 1)
+
+		(if dialogue (print "BUCK (helmet): Damn turret! One grenade outta do it�"))
+		(sleep (ai_play_line_on_object NONE SC100_0190))
+		(sleep 10)
+
+)
+
+; ===================================================================================================================================================
+
+(script dormant md_020_post
+	(if debug (print "mission dialogue:020:post"))
+
+	(sleep 1)
+
+		(if dialogue (print "BUCK (helmet): What's with all the Brutes?"))
+		(sleep (ai_play_line_on_object NONE SC100_0200))
+		(sleep 10)
+
+		(if dialogue (print "DARE (radio): What do you mean?"))
+		(sleep (ai_play_line_on_object NONE SC100_0210))
+		(sleep 10)
+
+		(if dialogue (print "BUCK (helmet): I heard Mombasa was full of Elites. What happened?"))
+		(sleep (ai_play_line_on_object NONE SC100_0220))
+		(sleep 10)
+
+		(if dialogue (print "DARE (radio): It's...classified."))
+		(sleep (ai_play_line_on_object NONE SC100_0230))
+		(sleep 10)
+
+		(if dialogue (print "BUCK (helmet): Some things never change�"))
+		(sleep (ai_play_line_on_object NONE SC100_0240))
+		(sleep 10)
+
+)
+
+; ===================================================================================================================================================
+
+(script dormant md_030_mid_jackal
+	(if debug (print "mission dialogue:030:mid:jackal"))
+
+	(sleep 1)
+
+		(if dialogue (print "BUCK (helmet): Got a little Jackal problem!"))
+		(sleep (ai_play_line_on_object NONE SC100_0250))
+		(sleep 10)
+
+		(if dialogue (print "DARE (radio): An overcharged plasma-pistol shot will neutralize their shields."))
+		(sleep (ai_play_line_on_object NONE SC100_0260))
+		(sleep 10)
+
+		(if dialogue (print "DARE (radio): Should also take-down a Brute's armor."))
+		(sleep (ai_play_line_on_object NONE SC100_0270))
+		(sleep 10)
+
+		(if dialogue (print "BUCK (helmet): Oh yeah? Where were you a minute ago?"))
+		(sleep (ai_play_line_on_object NONE SC100_0280))
+		(sleep 10)
+
+		(if dialogue (print "DARE (radio): Still trapped inside my pod."))
+		(sleep (ai_play_line_on_object NONE SC100_0290))
+		(sleep 10)
+
+		(if dialogue (print "BUCK (helmet): I hear you�"))
+		(sleep (ai_play_line_on_object NONE SC100_0300))
+		(sleep 10)
+
+)
+
+; ===================================================================================================================================================
+
+(script dormant md_030_door
+	(if debug (print "mission dialogue:030:door"))
+
+	(sleep 1)
+
+		(if dialogue (print "BUCK (helmet): Gotta get through this door�"))
+		(sleep (ai_play_line_on_object NONE SC100_0310))
+		(sleep 10)
+
+		(if dialogue (print "BUCK (helmet): Should be a switch around here somewhere�"))
+		(sleep (ai_play_line_on_object NONE SC100_0320))
+		(sleep 10)
+
+)
+
+; ===================================================================================================================================================
+
+(script dormant md_040_init
+	(if debug (print "mission dialogue:040:init"))
+
+		; cast the actors
+		(vs_cast SQUAD TRUE "SC100_0330")
+			(set fem (vs_role 1))
+
+	; movement properties
+	(vs_enable_pathfinding_failsafe gr_allies TRUE)
+	(vs_enable_looking gr_allies  TRUE)
+	(vs_enable_targeting gr_allies TRUE)
+	(vs_enable_moving gr_allies TRUE)
+
+	(sleep 1)
+
+		(if dialogue (print "FEM: Gunny! Where'd you come from?"))
+		(vs_play_line fem TRUE SC100_0330)
+		(sleep 10)
+
+		(if dialogue (print "BUCK: Orbit. (pause) What's the plan Staff Sergeant?"))
+		(sleep (ai_play_line_on_object NONE SC100_0340))
+		
+		(sleep 10)
+
+		(if dialogue (print "FEM: Need someone to cut through this building, hit 'em from behind."))
+		(vs_play_line fem TRUE SC100_0350)
+		(sleep 10)
+
+		(if dialogue (print "BUCK: I'm on it. That's the way I'm headed anyways."))
+		(sleep (ai_play_line_on_object NONE SC100_0360))		
+		(sleep 10)
+
+		(if dialogue (print "FEM: Good luck! We'll keep you covered!"))
+		(vs_play_line fem TRUE SC100_0370)
+		(sleep 10)
+
+	; cleanup
+	(vs_release_all)
+)
+
+; ===================================================================================================================================================
+
+(script dormant md_040_dare_location
+	(if debug (print "mission dialogue:040:dare:location"))
+
+	(sleep 1)
+
+		(if dialogue (print "DARE (radio): Buck. Location."))
+		(sleep (ai_play_line_on_object NONE SC100_0380))
+		(sleep 10)
+
+		(if dialogue (print "BUCK (helmet): Almost there. What's wrong?"))
+		(sleep (ai_play_line_on_object NONE SC100_0390))
+		(sleep 10)
+
+		(if dialogue (print "DARE (radio): Multiple hostiles. Closing on my position."))
+		(sleep (ai_play_line_on_object NONE SC100_0400))
+		(sleep 10)
+
+		(if dialogue (print "DARE (radio): Listen carefully. If I don�t make it --"))
+		(sleep (ai_play_line_on_object NONE SC100_0410))
+		(sleep 10)
+
+		(if dialogue (print "BUCK: Whoa! Hang on! I'll be right there --"))
+		(sleep (ai_play_line_on_object NONE SC100_0420))		
+		
+		(sleep 10)
+
+		(if dialogue (print "DARE (radio): Too late! They spotted me!"))
+		(sleep (ai_play_line_on_object NONE SC100_0430))
+		(sleep 10)
+
+		(if dialogue (print "BUCK (helmet): Dammit! No!"))
+		(sleep (ai_play_line_on_object NONE SC100_0440))
+		(sleep 10)
+
+		(if dialogue (print "BUCK (helmet): Veronica! (pause) Talk to me!"))
+		(sleep (ai_play_line_on_object NONE SC100_0450))
+		(sleep 10)
+
+		(if dialogue (print "BUCK (helmet): Don't move! I'm coming, you hear?"))
+		(sleep (ai_play_line_on_object NONE SC100_0460))
+		(sleep 10)
+
+)
+
+; ===================================================================================================================================================
+
+(script dormant md_040_dare_hunter
+	(if debug (print "mission dialogue:040:dare:hunter"))
+	(sleep 1)
+
+		(if dialogue (print "BUCK (helmet) : Hunters?! Oh no, I do NOT have time for this!"))
+		(sleep (ai_play_line_on_object NONE SC100_0470))		
+		
+		(sleep 10)
+
+		(if dialogue (print "BUCK (helmet) : Turn around you bastards! Let me shoot you in the back!"))
+		(sleep (ai_play_line_on_object NONE SC100_0480))				
+		(sleep 10)
+
+)
+
+; ===================================================================================================================================================
+
+(script dormant md_050_pod_reminder
+	(if debug (print "mission dialogue:050:pod:reminder"))
+	(sleep 1)
+
+		(if dialogue (print "BUCK: There's her pod. Need to find a way down�"))
+		(sleep (ai_play_line_on_object NONE SC100_0490))						
+		(sleep 10)
+
+		(if dialogue (print "BUCK: Looks clear, Buck. Go!"))
+		(sleep (ai_play_line_on_object NONE SC100_0500))								
+		(sleep 10)
+
+)
+
+; ===================================================================================================================================================
